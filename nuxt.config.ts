@@ -16,6 +16,14 @@ export default defineNuxtConfig({
     documentDriven: true,
     navigation: {
       fields: ['title', 'description', 'order']
+    },
+    api: { 
+      baseURL: '/api/_content' 
+    },
+    // Needed for Nuxt Studio
+    experimental: {
+      clientDB: true,
+      stripQueryParameters: true
     }
   },
 
