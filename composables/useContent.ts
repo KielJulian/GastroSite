@@ -71,30 +71,30 @@ export const useRestaurantContent = () => {
    */
   const getLatestLunchMenu = async () => {
     const now = new Date();
+    const currentDate = now.toISOString().split('T')[0];
+    
+    // Simple query without operators to avoid TypeScript errors
     const { data } = await useAsyncData('latest-lunch-menu', () => 
       queryContent('/lunch-menus')
-        .where({ 
-          $and: [
-            { startDate: { $lte: now.toISOString().split('T')[0] } },
-            { endDate: { $gte: now.toISOString().split('T')[0] } }
-          ]
-        })
-        .findOne()
+        .find()
     );
     
-    if (!data.value) {
-      // If no current menu, get the most recent one
-      const { data: recentData } = await useAsyncData('recent-lunch-menu', () => 
-        queryContent('/lunch-menus')
-          .sort({ startDate: -1 })
-          .limit(1)
-          .findOne()
+    // Manual filtering in JavaScript
+    let activeMenu = null;
+    if (data.value && data.value.length > 0) {
+      activeMenu = data.value.find(menu => 
+        menu.startDate <= currentDate && menu.endDate >= currentDate
       );
       
-      return recentData.value;
+      // If no active menu, get the most recent one
+      if (!activeMenu) {
+        activeMenu = [...data.value].sort((a, b) => 
+          new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
+        )[0];
+      }
     }
     
-    return data.value;
+    return activeMenu;
   };
 
   /**

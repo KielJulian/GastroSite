@@ -20,6 +20,22 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 
+// Type definitions for i18n content
+interface LocalizedText {
+  en: string;
+  de: string;
+  [key: string]: string; // Allow any string as key for dynamic locale access
+}
+
+interface TeamMember {
+  id: string;
+  name: string;
+  position: LocalizedText;
+  bio: LocalizedText;
+  image: string;
+  order: number;
+}
+
 const props = defineProps({
   limit: {
     type: Number,
@@ -28,7 +44,7 @@ const props = defineProps({
 });
 
 // Mock data - in real app this would come from the CMS
-const teamMembers = ref([
+const teamMembers = ref<TeamMember[]>([
   {
     id: 'jane-doe',
     name: 'Jane Doe',

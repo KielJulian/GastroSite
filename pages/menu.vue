@@ -72,22 +72,52 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 
+// Type definitions for i18n content
+interface LocalizedText {
+  en: string;
+  de: string;
+  [key: string]: string; // Allow any string as key for dynamic locale access
+}
+
+interface MenuItem {
+  id: string;
+  name: LocalizedText;
+  description: LocalizedText;
+  price: number;
+  category: string;
+  tags: string[];
+  order: number;
+}
+
+interface Category {
+  id: string;
+  name: string;
+  description: string;
+  order: number;
+}
+
+interface Tag {
+  id: string;
+  name: string;
+  icon: string;
+}
+
 // Mock data - in real app this would come from the CMS
-const categories = ref([
+const categories = ref<Category[]>([
   { id: 'pizza', name: 'Pizza', description: 'Our stone-baked pizzas', order: 1 },
   { id: 'pasta', name: 'Pasta', description: 'Homemade pasta dishes', order: 2 },
   { id: 'salads', name: 'Salads', description: 'Fresh seasonal salads', order: 3 },
   { id: 'desserts', name: 'Desserts', description: 'Sweet treats', order: 4 }
 ]);
 
-const tags = ref([
+const tags = ref<Tag[]>([
   { id: 'vegetarian', name: 'Vegetarian', icon: 'leaf' },
   { id: 'vegan', name: 'Vegan', icon: 'plant' },
   { id: 'spicy', name: 'Spicy', icon: 'fire' },
   { id: 'gluten-free', name: 'Gluten-Free', icon: 'wheat-slash' }
 ]);
 
-const menuItems = ref([
+const menuItems = ref<MenuItem[]>([
   {
     id: 'margherita',
     name: { en: 'Margherita Pizza', de: 'Pizza Margherita' },

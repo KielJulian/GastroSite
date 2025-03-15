@@ -31,6 +31,28 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 
+// Type definitions for i18n content
+interface LocalizedText {
+  en: string;
+  de: string;
+  [key: string]: string; // Allow any string as key for dynamic locale access
+}
+
+interface MenuItem {
+  day: string;
+  name: LocalizedText;
+  description: LocalizedText;
+  price: number;
+  order: number;
+}
+
+interface LunchMenu {
+  startDate: string;
+  endDate: string;
+  title: LocalizedText;
+  items: MenuItem[];
+}
+
 const props = defineProps({
   isFullPage: {
     type: Boolean,
@@ -39,7 +61,7 @@ const props = defineProps({
 });
 
 // Mock data - in real app this would come from the CMS
-const currentMenu = ref({
+const currentMenu = ref<LunchMenu>({
   startDate: "2025-03-18",
   endDate: "2025-03-22",
   title: {

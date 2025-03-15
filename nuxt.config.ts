@@ -38,10 +38,6 @@ export default defineNuxtConfig({
     experimental: {
       clientDB: true,
       stripQueryParameters: true
-    },
-    contentTypes: {
-      'menu': { type: 'yaml', navigation: true },
-      'team': { navigation: true }
     }
   },
 
