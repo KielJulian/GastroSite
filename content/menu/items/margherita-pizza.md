@@ -5,7 +5,7 @@ name:
 description:
   en: Classic pizza with tomato sauce, mozzarella, and fresh basil
   de: Klassische Pizza mit Tomatensauce, Mozzarella und frischem Basilikum
-price: 12
+price: 13.4
 category: pizza
 tags:
   - vegetarian
