@@ -16,9 +16,7 @@ export default defineNuxtConfig({
     prerender: {
       failOnError: false, // Don't fail on prerender errors
       ignore: ['/api/**'] // Skip API routes during prerendering
-    },
-    // Vercel specific configuration
-    preset: 'vercel'
+    }
   },
 
   content: {
