@@ -25,21 +25,7 @@ export default defineNuxtConfig({
     enabled: true
   },
 
-  content: {
-    // Nuxt Content configuration
-    documentDriven: true,
-    navigation: {
-      fields: ['title', 'description', 'order']
-    },
-    api: { 
-      baseURL: '/api/_content' 
-    },
-    // Needed for Nuxt Studio
-    experimental: {
-      clientDB: true,
-      stripQueryParameters: true
-    }
-  },
+  content: {},
 
   i18n: {
     // Nuxt i18n configuration

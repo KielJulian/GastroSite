@@ -75,5 +75,14 @@
     "friday": "Friday",
     "saturday": "Saturday",
     "sunday": "Sunday"
+  },
+  "team": {
+    "hero": {
+      "title": "Our Team",
+      "subtitle": "Meet the culinary experts who make the magic happen in our kitchen"
+    }
+  },
+  "general": {
+    "loading": "Loading content..."
   }
 }

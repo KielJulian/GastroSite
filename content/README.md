@@ -1,78 +1,50 @@
-# Restaurant CMS Content Structure
+# Content Management for GastroSite
 
-This directory contains all the content for your restaurant website. Each folder represents a different content type.
+## Description
 
-## Content Types
+This directory contains the CMS content for the GastroSite website. It's structured to be used with Nuxt Content and Nuxt Studio, which allows you to edit content via the CMS and see it reflected on the site.
 
-### Team Members (`/team/*.md`)
+## Current Status
 
-Team member profiles for the staff page.
+Currently, there are some issues with the integration between the Nuxt Content module and the site components. As a temporary workaround, some pages have been updated to use hardcoded data while we address these issues.
 
-- Use the `_template.md` file as a guide for creating new team members
-- Required fields: name, position (localized), bio (localized), image, order
-- Images should be placed in `/public/images/team/`
+## Integration Plan
 
-### Menu Items (`/menu/items/*.md`)
+To fix the CMS integration issues:
 
-Food and beverage items for the menu page.
+1. Update the Nuxt Content configuration:
+   - Make sure your `nuxt.config.ts` has a proper Content configuration
+   - Ensure you're using a compatible version of Nuxt and Nuxt Content
 
-- Use the `_template.md` file as a guide for creating new menu items
-- Required fields: name (localized), description (localized), price, category, image, order
-- Optional fields: tags
-- Images should be placed in `/public/images/menu/`
-- Categories are defined in `/menu/categories/{locale}.yaml`
-- Tags are defined in `/menu/tags/{locale}.yaml`
+2. Fix content paths and API:
+   - The content structure is correct, but the way we're accessing content needs to be updated
+   - Use the correct Nuxt Content API to fetch items from the CMS
 
-### Menu Categories (`/menu/categories/*.yaml`)
+3. Update components to properly handle loading states and null data
 
-Categories for organizing menu items (pizza, pasta, etc.)
+## Content Structure
 
-- Defines the available categories for menu items
-- Each category has: id, name, description, order
+- `/team/` - Contains team member profiles
+- `/menu/categories/` - Menu categories in different languages
+- `/menu/tags/` - Menu item tags in different languages
+- `/menu/items/` - Individual menu items
+- `/lunch-menus/` - Weekly lunch menus
 
-### Menu Tags (`/menu/tags/*.yaml`)
+## File Format
 
-Tags for dietary preferences (vegetarian, gluten-free, etc.)
+Content files are written in Markdown or YAML, with YAML frontmatter for metadata:
 
-- Defines the available tags for menu items
-- Each tag has: id, name, icon
+```md
+---
+name: John Smith
+position:
+  en: Chef
+  de: Koch
+---
 
-### Lunch Menus (`/lunch-menus/*.md`)
+This is the content body (only for markdown files).
+```
 
-Special lunch menus that change regularly.
+## Templates
 
-- Each file represents a different lunch menu for a specific date
-- Date format in filename: YYYY-MM-DD.md
-- Contains the lunch menu items for that day
-
-## Content Structure Guidelines
-
-1. **File Naming**
-   - Use kebab-case for filenames (example: `margherita-pizza.md`, `jane-doe.md`)
-   - Use lowercase letters only
-   - Separate words with hyphens
-
-2. **Images**
-   - All images should be placed in the `/public/images/` directory
-   - Use the respective subdirectory for each content type (`/public/images/team/`, `/public/images/menu/`)
-   - Recommended image formats: JPG, PNG
-   - Keep file sizes reasonable (optimize images for web)
-
-3. **Localization**
-   - All user-facing text should be provided in both English and German
-   - Use the localization format shown in the templates:
-     ```yaml
-     field_name:
-       en: "English text"
-       de: "German text"
-     ```
-
-4. **Ordering**
-   - The `order` field determines the display order on the website
-   - Lower numbers appear first
-   - Make sure to properly manage order numbers when adding new content
-
-5. **Templates**
-   - Every content type has a `_template.md` file to guide you
-   - Copy this file and rename it when creating new content
-   - Follow the instructions and fill in all required fields
+Each content type has a `_template.md` file that shows the required fields for that content type.

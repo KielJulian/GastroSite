@@ -16,7 +16,66 @@
       <div class="container">
         <h2 class="section-title">{{ $t('menu.lunchMenu.title') }}</h2>
         <p class="section-description text-center">{{ $t('menu.lunchMenu.description') }}</p>
-        <LunchMenuPreview :isFullPage="true" />
+        
+        <!-- Hardcoded lunch menu preview -->
+        <div class="lunch-menu">
+          <div class="lunch-menu-header">
+            <h3 class="lunch-menu-title">Spring Special Week</h3>
+            <p class="lunch-menu-dates">18.03.2025 - 22.03.2025</p>
+          </div>
+          
+          <div class="lunch-menu-days full-page">
+            <div class="lunch-menu-day">
+              <h4 class="day-title">{{ $t('days.monday') }}</h4>
+              <div class="day-items">
+                <div class="lunch-menu-item">
+                  <div class="item-header">
+                    <h5 class="item-name">{{ $i18n.locale === 'en' ? 'Mushroom Risotto' : 'Pilzrisotto' }}</h5>
+                    <span class="item-price">€9.90</span>
+                  </div>
+                  <p class="item-description">
+                    {{ $i18n.locale === 'en' ? 'Creamy arborio rice with seasonal mushrooms' : 'Cremiger Arborio-Reis mit Saisonpilzen' }}
+                  </p>
+                </div>
+                <div class="lunch-menu-item">
+                  <div class="item-header">
+                    <h5 class="item-name">{{ $i18n.locale === 'en' ? 'Tomato Soup' : 'Tomatensuppe' }}</h5>
+                    <span class="item-price">€6.90</span>
+                  </div>
+                  <p class="item-description">
+                    {{ $i18n.locale === 'en' ? 'Classic tomato soup with basil and croutons' : 'Klassische Tomatensuppe mit Basilikum und Croutons' }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="lunch-menu-day">
+              <h4 class="day-title">{{ $t('days.tuesday') }}</h4>
+              <div class="day-items">
+                <div class="lunch-menu-item">
+                  <div class="item-header">
+                    <h5 class="item-name">{{ $i18n.locale === 'en' ? 'Chicken Curry' : 'Hähnchen-Curry' }}</h5>
+                    <span class="item-price">€10.90</span>
+                  </div>
+                  <p class="item-description">
+                    {{ $i18n.locale === 'en' ? 'Tender chicken pieces in a mild curry sauce with rice' : 'Zarte Hähnchenstücke in milder Currysauce mit Reis' }}
+                  </p>
+                </div>
+                <div class="lunch-menu-item">
+                  <div class="item-header">
+                    <h5 class="item-name">{{ $i18n.locale === 'en' ? 'Vegetable Quiche' : 'Gemüsequiche' }}</h5>
+                    <span class="item-price">€8.90</span>
+                  </div>
+                  <p class="item-description">
+                    {{ $i18n.locale === 'en' ? 'Homemade quiche with seasonal vegetables and a side salad' : 'Hausgemachte Quiche mit Saisongemüse und Beilagensalat' }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Additional days would go here -->
+          </div>
+        </div>
       </div>
     </section>
 
@@ -69,55 +128,25 @@
   </NuxtLayout>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, computed } from 'vue';
 
 // Type definitions for i18n content
-interface LocalizedText {
-  en: string;
-  de: string;
-  [key: string]: string; // Allow any string as key for dynamic locale access
-}
-
-interface MenuItem {
-  id: string;
-  name: LocalizedText;
-  description: LocalizedText;
-  price: number;
-  category: string;
-  tags: string[];
-  order: number;
-}
-
-interface Category {
-  id: string;
-  name: string;
-  description: string;
-  order: number;
-}
-
-interface Tag {
-  id: string;
-  name: string;
-  icon: string;
-}
-
-// Mock data - in real app this would come from the CMS
-const categories = ref<Category[]>([
+const categories = ref([
   { id: 'pizza', name: 'Pizza', description: 'Our stone-baked pizzas', order: 1 },
   { id: 'pasta', name: 'Pasta', description: 'Homemade pasta dishes', order: 2 },
   { id: 'salads', name: 'Salads', description: 'Fresh seasonal salads', order: 3 },
   { id: 'desserts', name: 'Desserts', description: 'Sweet treats', order: 4 }
 ]);
 
-const tags = ref<Tag[]>([
+const tags = ref([
   { id: 'vegetarian', name: 'Vegetarian', icon: 'leaf' },
   { id: 'vegan', name: 'Vegan', icon: 'plant' },
   { id: 'spicy', name: 'Spicy', icon: 'fire' },
   { id: 'gluten-free', name: 'Gluten-Free', icon: 'wheat-slash' }
 ]);
 
-const menuItems = ref<MenuItem[]>([
+const menuItems = ref([
   {
     id: 'margherita',
     name: { en: 'Margherita Pizza', de: 'Pizza Margherita' },
@@ -240,7 +269,7 @@ const menuItems = ref<MenuItem[]>([
   },
 ]);
 
-const activeTagFilters = ref<string[]>([]);
+const activeTagFilters = ref([]);
 
 // Sort categories by order
 const sortedCategories = computed(() => {
@@ -248,7 +277,7 @@ const sortedCategories = computed(() => {
 });
 
 // Get items for a specific category
-const getFilteredItemsByCategory = (categoryId: string) => {
+const getFilteredItemsByCategory = (categoryId) => {
   let items = menuItems.value
     .filter(item => item.category === categoryId)
     .sort((a, b) => a.order - b.order);
@@ -264,7 +293,7 @@ const getFilteredItemsByCategory = (categoryId: string) => {
 };
 
 // Toggle tag filter
-const toggleTagFilter = (tagId: string) => {
+const toggleTagFilter = (tagId) => {
   const index = activeTagFilters.value.indexOf(tagId);
   if (index === -1) {
     activeTagFilters.value.push(tagId);
@@ -274,7 +303,7 @@ const toggleTagFilter = (tagId: string) => {
 };
 
 // Get tag name by ID
-const getTagName = (tagId: string): string => {
+const getTagName = (tagId) => {
   const tag = tags.value.find(tag => tag.id === tagId);
   return tag ? tag.name : '';
 };
@@ -284,7 +313,6 @@ const getTagName = (tagId: string): string => {
 .menu-hero {
   height: 40vh;
   min-height: 300px;
-  /* background-image: url('/images/menu-hero.jpg'); */
   background-color: var(--color-secondary);
 }
 
@@ -376,8 +404,68 @@ const getTagName = (tagId: string): string => {
   border: 1px solid var(--color-border);
 }
 
+/* Lunch menu styles */
+.lunch-menu {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.lunch-menu-header {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.lunch-menu-title {
+  margin-bottom: var(--spacing-xs);
+}
+
+.lunch-menu-dates {
+  color: var(--color-text-light);
+  font-style: italic;
+}
+
+.lunch-menu-days {
+  display: grid;
+  gap: var(--spacing-lg);
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.lunch-menu-days.full-page {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.lunch-menu-day {
+  background-color: var(--color-background);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+}
+
+.day-title {
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 2px solid var(--color-primary);
+  text-align: center;
+}
+
+.day-items {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.lunch-menu-item {
+  margin-bottom: var(--spacing-md);
+}
+
 @media (max-width: 767px) {
   .menu-items.grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .lunch-menu-days, .lunch-menu-days.full-page {
     grid-template-columns: 1fr;
   }
 }

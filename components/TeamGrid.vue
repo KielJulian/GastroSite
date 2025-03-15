@@ -1,6 +1,6 @@
 <template>
   <div class="team-grid">
-    <div class="grid grid-3">
+    <div v-if="teamMembers.length > 0" class="grid grid-3">
       <div 
         v-for="member in limitedTeamMembers" 
         :key="member.id" 
@@ -14,11 +14,15 @@
         <p class="team-member-bio">{{ member.bio[$i18n.locale] }}</p>
       </div>
     </div>
+    <div v-else class="team-loading">
+      <p>{{ $t('general.loading') }}</p>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import { useRestaurantContent } from '~/composables/useContent';
 
 // Type definitions for i18n content
 interface LocalizedText {
@@ -43,79 +47,14 @@ const props = defineProps({
   }
 });
 
-// Mock data - in real app this would come from the CMS
-const teamMembers = ref<TeamMember[]>([
-  {
-    id: 'jane-doe',
-    name: 'Jane Doe',
-    position: {
-      en: 'Head Chef',
-      de: 'Küchenchef'
-    },
-    bio: {
-      en: 'Jane has 15 years of experience in the culinary world, specializing in Italian cuisine. She has worked in Michelin-starred restaurants across Europe before joining our team.',
-      de: 'Jane hat 15 Jahre Erfahrung in der kulinarischen Welt und ist auf die italienische Küche spezialisiert. Sie hat in Michelin-Restaurants in ganz Europa gearbeitet, bevor sie zu unserem Team kam.'
-    },
-    image: '/images/team/jane-doe.jpg',
-    order: 1
-  },
-  {
-    id: 'john-smith',
-    name: 'John Smith',
-    position: {
-      en: 'Sous Chef',
-      de: 'Souschef'
-    },
-    bio: {
-      en: 'John trained at the Culinary Institute of America and specializes in modern European cuisine. He brings creative flair to our seasonal menu items.',
-      de: 'John wurde am Culinary Institute of America ausgebildet und ist auf moderne europäische Küche spezialisiert. Er bringt kreativen Flair in unsere saisonalen Menüpunkte.'
-    },
-    image: '/images/team/john-smith.jpg',
-    order: 2
-  },
-  {
-    id: 'maria-garcia',
-    name: 'Maria Garcia',
-    position: {
-      en: 'Pastry Chef',
-      de: 'Konditorin'
-    },
-    bio: {
-      en: 'Maria is a master of sweet creations with a background in French pastry. Her desserts combine traditional techniques with innovative flavor combinations.',
-      de: 'Maria ist eine Meisterin süßer Kreationen mit Hintergrund in der französischen Konditorei. Ihre Desserts kombinieren traditionelle Techniken mit innovativen Geschmackskombinationen.'
-    },
-    image: '/images/team/maria-garcia.jpg',
-    order: 3
-  },
-  {
-    id: 'thomas-mueller',
-    name: 'Thomas Müller',
-    position: {
-      en: 'Restaurant Manager',
-      de: 'Restaurantleiter'
-    },
-    bio: {
-      en: 'Thomas has a degree in hospitality management and oversees all operations of the restaurant. He ensures that every guest has an exceptional dining experience.',
-      de: 'Thomas hat einen Abschluss in Hospitality Management und überwacht alle Abläufe des Restaurants. Er sorgt dafür, dass jeder Gast ein außergewöhnliches Esserlebnis hat.'
-    },
-    image: '/images/team/thomas-mueller.jpg',
-    order: 4
-  },
-  {
-    id: 'sophia-chen',
-    name: 'Sophia Chen',
-    position: {
-      en: 'Sommelier',
-      de: 'Sommelière'
-    },
-    bio: {
-      en: 'Sophia is our wine expert with certification from the Court of Master Sommeliers. She has curated our wine selection to perfectly complement our menu.',
-      de: 'Sophia ist unsere Weinexpertin mit Zertifizierung vom Court of Master Sommeliers. Sie hat unsere Weinauswahl zusammengestellt, um unser Menü perfekt zu ergänzen.'
-    },
-    image: '/images/team/sophia-chen.jpg',
-    order: 5
-  }
-]);
+// Use the content composable to fetch team members
+const { getTeamMembers } = useRestaurantContent();
+const teamMembers = ref<TeamMember[]>([]);
+
+// Fetch team members on component mount
+onMounted(async () => {
+  teamMembers.value = await getTeamMembers();
+});
 
 // Sort and limit team members
 const limitedTeamMembers = computed(() => {
@@ -132,6 +71,14 @@ const limitedTeamMembers = computed(() => {
 <style scoped>
 .team-grid {
   margin-bottom: var(--spacing-xl);
+}
+
+.team-loading {
+  text-align: center;
+  padding: var(--spacing-xl);
+  background-color: var(--color-background);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
 }
 
 .team-member {
