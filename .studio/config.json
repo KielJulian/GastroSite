@@ -1,0 +1,385 @@
+{
+  "title": "GastroSite CMS",
+  "description": "Content management for GastroSite restaurant website",
+  "icon": {
+    "light": "/nuxt-studio-logo-light.svg",
+    "dark": "/nuxt-studio-logo-dark.svg"
+  },
+  "navigation": [
+    {
+      "title": "Menu",
+      "icon": "i-heroicons-menu",
+      "children": [
+        {
+          "title": "Menu Items",
+          "to": "/menu/items",
+          "icon": "i-heroicons-document-text"
+        },
+        {
+          "title": "Categories",
+          "to": "/menu/categories",
+          "icon": "i-heroicons-folder"
+        },
+        {
+          "title": "Tags",
+          "to": "/menu/tags",
+          "icon": "i-heroicons-tag"
+        }
+      ]
+    },
+    {
+      "title": "Lunch Menus",
+      "icon": "i-heroicons-calendar",
+      "to": "/lunch-menus"
+    },
+    {
+      "title": "Team",
+      "icon": "i-heroicons-users",
+      "to": "/team"
+    }
+  ],
+  "collections": {
+    "menu/items": {
+      "label": "Menu Items",
+      "icon": "i-heroicons-document-text",
+      "group": "Menu",
+      "order": 1,
+      "fields": {
+        "name": {
+          "label": "Name",
+          "type": "object",
+          "fields": {
+            "en": {
+              "label": "English",
+              "type": "string",
+              "required": true
+            },
+            "de": {
+              "label": "German",
+              "type": "string",
+              "required": true
+            }
+          }
+        },
+        "description": {
+          "label": "Description",
+          "type": "object",
+          "fields": {
+            "en": {
+              "label": "English",
+              "type": "string",
+              "required": true
+            },
+            "de": {
+              "label": "German",
+              "type": "string",
+              "required": true
+            }
+          }
+        },
+        "price": {
+          "label": "Price",
+          "type": "number",
+          "required": true,
+          "min": 0
+        },
+        "category": {
+          "label": "Category",
+          "type": "string",
+          "required": true,
+          "options": {
+            "type": "values",
+            "values": [
+              "pizza",
+              "pasta",
+              "salads",
+              "desserts"
+            ]
+          }
+        },
+        "tags": {
+          "label": "Tags",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "options": {
+              "type": "values",
+              "values": [
+                "vegetarian",
+                "vegan",
+                "spicy",
+                "gluten-free"
+              ]
+            }
+          }
+        },
+        "image": {
+          "label": "Image",
+          "type": "string",
+          "required": true,
+          "component": "media-browser"
+        },
+        "order": {
+          "label": "Order",
+          "type": "number",
+          "required": true,
+          "default": 1
+        }
+      },
+      "sortable": {
+        "field": "order",
+        "direction": "asc"
+      }
+    },
+    "menu/categories": {
+      "label": "Menu Categories",
+      "icon": "i-heroicons-folder",
+      "group": "Menu",
+      "order": 2,
+      "fields": {
+        "categories": {
+          "label": "Categories",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "fields": {
+              "id": {
+                "label": "ID",
+                "type": "string",
+                "required": true
+              },
+              "name": {
+                "label": "Name",
+                "type": "string",
+                "required": true
+              },
+              "description": {
+                "label": "Description",
+                "type": "string",
+                "required": true
+              },
+              "order": {
+                "label": "Order",
+                "type": "number",
+                "required": true,
+                "default": 1
+              }
+            }
+          }
+        }
+      },
+      "structure": {
+        "categories": {
+          "sortable": {
+            "field": "order",
+            "direction": "asc"
+          }
+        }
+      }
+    },
+    "menu/tags": {
+      "label": "Menu Tags",
+      "icon": "i-heroicons-tag",
+      "group": "Menu",
+      "order": 3,
+      "fields": {
+        "tags": {
+          "label": "Tags",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "fields": {
+              "id": {
+                "label": "ID",
+                "type": "string",
+                "required": true
+              },
+              "name": {
+                "label": "Name",
+                "type": "string",
+                "required": true
+              },
+              "icon": {
+                "label": "Icon",
+                "type": "string",
+                "required": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "lunch-menus": {
+      "label": "Lunch Menus",
+      "icon": "i-heroicons-calendar",
+      "group": "Lunch",
+      "fields": {
+        "startDate": {
+          "label": "Start Date",
+          "type": "string",
+          "required": true,
+          "component": "date-picker"
+        },
+        "endDate": {
+          "label": "End Date",
+          "type": "string",
+          "required": true,
+          "component": "date-picker"
+        },
+        "title": {
+          "label": "Title",
+          "type": "object",
+          "fields": {
+            "en": {
+              "label": "English",
+              "type": "string",
+              "required": true
+            },
+            "de": {
+              "label": "German",
+              "type": "string",
+              "required": true
+            }
+          }
+        },
+        "items": {
+          "label": "Menu Items",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "fields": {
+              "day": {
+                "label": "Day",
+                "type": "string",
+                "required": true,
+                "options": {
+                  "type": "values",
+                  "values": [
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday"
+                  ]
+                }
+              },
+              "name": {
+                "label": "Name",
+                "type": "object",
+                "fields": {
+                  "en": {
+                    "label": "English",
+                    "type": "string",
+                    "required": true
+                  },
+                  "de": {
+                    "label": "German",
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              },
+              "description": {
+                "label": "Description",
+                "type": "object",
+                "fields": {
+                  "en": {
+                    "label": "English",
+                    "type": "string",
+                    "required": true
+                  },
+                  "de": {
+                    "label": "German",
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              },
+              "price": {
+                "label": "Price",
+                "type": "number",
+                "required": true,
+                "min": 0
+              },
+              "order": {
+                "label": "Order",
+                "type": "number",
+                "required": true,
+                "default": 1
+              }
+            }
+          }
+        }
+      },
+      "structure": {
+        "items": {
+          "sortable": {
+            "field": "order",
+            "direction": "asc"
+          }
+        }
+      }
+    },
+    "team": {
+      "label": "Team Members",
+      "icon": "i-heroicons-users",
+      "fields": {
+        "name": {
+          "label": "Name",
+          "type": "string",
+          "required": true
+        },
+        "position": {
+          "label": "Position",
+          "type": "object",
+          "fields": {
+            "en": {
+              "label": "English",
+              "type": "string",
+              "required": true
+            },
+            "de": {
+              "label": "German",
+              "type": "string",
+              "required": true
+            }
+          }
+        },
+        "bio": {
+          "label": "Biography",
+          "type": "object",
+          "fields": {
+            "en": {
+              "label": "English",
+              "type": "string",
+              "required": true,
+              "component": "textarea"
+            },
+            "de": {
+              "label": "German",
+              "type": "string",
+              "required": true,
+              "component": "textarea"
+            }
+          }
+        },
+        "image": {
+          "label": "Image",
+          "type": "string",
+          "required": true,
+          "component": "media-browser"
+        },
+        "order": {
+          "label": "Order",
+          "type": "number",
+          "required": true,
+          "default": 1
+        }
+      },
+      "sortable": {
+        "field": "order",
+        "direction": "asc"
+      }
+    }
+  }
+}

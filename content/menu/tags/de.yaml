@@ -1,0 +1,13 @@
+tags:
+  - id: "vegetarian"
+    name: "Vegetarisch"
+    icon: "leaf"
+  - id: "vegan"
+    name: "Vegan"
+    icon: "plant"
+  - id: "spicy"
+    name: "Scharf"
+    icon: "fire"
+  - id: "gluten-free"
+    name: "Glutenfrei"
+    icon: "wheat-slash"

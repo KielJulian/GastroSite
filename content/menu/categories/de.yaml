@@ -1,0 +1,17 @@
+categories:
+  - id: "pizza"
+    name: "Pizza"
+    description: "Unsere Steinofenpizzen"
+    order: 1
+  - id: "pasta"
+    name: "Pasta"
+    description: "Hausgemachte Pastagerichte"
+    order: 2
+  - id: "salads"
+    name: "Salate"
+    description: "Frische saisonale Salate"
+    order: 3
+  - id: "desserts"
+    name: "Desserts"
+    description: "Süße Köstlichkeiten"
+    order: 4

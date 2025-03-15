@@ -1,0 +1,79 @@
+{
+  "navigation": {
+    "menu": "Menu",
+    "team": "Team",
+    "contact": "Contact"
+  },
+  "footer": {
+    "description": "GastroSite offers authentic cuisine in a cozy atmosphere. Visit us and enjoy a culinary journey.",
+    "contactTitle": "Contact",
+    "openingHours": "Opening Hours",
+    "monFri": "Monday - Friday",
+    "satSun": "Saturday - Sunday",
+    "allRightsReserved": "All rights reserved"
+  },
+  "home": {
+    "hero": {
+      "title": "Welcome to GastroSite",
+      "subtitle": "Experience authentic cuisine in a cozy atmosphere",
+      "menuButton": "View Our Menu"
+    },
+    "lunchMenu": {
+      "title": "This Week's Lunch Specials"
+    },
+    "team": {
+      "title": "Our Team",
+      "description": "Meet the culinary experts who make the magic happen in our kitchen."
+    },
+    "rooms": {
+      "title": "Our Dining Areas",
+      "description": "Discover our different dining areas, each with its own unique atmosphere.",
+      "mainDining": {
+        "title": "Main Dining Room",
+        "description": "Our spacious main dining area offers a warm and inviting atmosphere."
+      },
+      "privateDining": {
+        "title": "Private Dining",
+        "description": "Perfect for special occasions, our private room accommodates up to 20 guests."
+      },
+      "gardenTerrace": {
+        "title": "Garden Terrace",
+        "description": "Enjoy al fresco dining on our beautiful garden terrace during warm months."
+      }
+    },
+    "contact": {
+      "title": "Contact Us",
+      "findUs": "Find Us",
+      "openingHours": "Opening Hours",
+      "monFri": "Monday - Friday",
+      "satSun": "Saturday - Sunday",
+      "location": "Location"
+    }
+  },
+  "menu": {
+    "hero": {
+      "title": "Our Menu",
+      "subtitle": "Discover our culinary creations made with fresh, locally-sourced ingredients"
+    },
+    "lunchMenu": {
+      "title": "Lunch Specials",
+      "description": "Available Monday to Friday from 11:30 to 14:30"
+    },
+    "regularMenu": {
+      "title": "À La Carte Menu",
+      "description": "Our regular menu is available daily from 17:00 to 22:00"
+    },
+    "filters": {
+      "dietary": "Dietary Preferences"
+    }
+  },
+  "days": {
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
+  }
+}
