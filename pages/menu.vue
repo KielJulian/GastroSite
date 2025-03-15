@@ -17,64 +17,13 @@
         <h2 class="section-title">Lunch Specials</h2>
         <p class="section-description text-center">Available Monday to Friday from 11:30 to 14:30</p>
         
-        <!-- Hardcoded lunch menu preview -->
-        <div class="lunch-menu">
-          <div class="lunch-menu-header">
-            <h3 class="lunch-menu-title">Spring Special Week</h3>
-            <p class="lunch-menu-dates">18.03.2025 - 22.03.2025</p>
-          </div>
-          
-          <div class="lunch-menu-days full-page">
-            <div class="lunch-menu-day">
-              <h4 class="day-title">Monday</h4>
-              <div class="day-items">
-                <div class="lunch-menu-item">
-                  <div class="item-header">
-                    <h5 class="item-name">Mushroom Risotto</h5>
-                    <span class="item-price">€9.90</span>
-                  </div>
-                  <p class="item-description">
-                    Creamy arborio rice with seasonal mushrooms
-                  </p>
-                </div>
-                <div class="lunch-menu-item">
-                  <div class="item-header">
-                    <h5 class="item-name">Tomato Soup</h5>
-                    <span class="item-price">€6.90</span>
-                  </div>
-                  <p class="item-description">
-                    Classic tomato soup with basil and croutons
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            <div class="lunch-menu-day">
-              <h4 class="day-title">Tuesday</h4>
-              <div class="day-items">
-                <div class="lunch-menu-item">
-                  <div class="item-header">
-                    <h5 class="item-name">Chicken Curry</h5>
-                    <span class="item-price">€10.90</span>
-                  </div>
-                  <p class="item-description">
-                    Tender chicken pieces in a mild curry sauce with rice
-                  </p>
-                </div>
-                <div class="lunch-menu-item">
-                  <div class="item-header">
-                    <h5 class="item-name">Vegetable Quiche</h5>
-                    <span class="item-price">€8.90</span>
-                  </div>
-                  <p class="item-description">
-                    Homemade quiche with seasonal vegetables and a side salad
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Additional days would go here -->
-          </div>
+        <div v-if="lunchMenuPending" class="loading-indicator">Loading lunch menu...</div>
+        <div v-else-if="lunchMenuError" class="error-message">
+          Error loading lunch menu. Please try again later.
+        </div>
+        <LunchMenuPreview v-else-if="lunchMenu" :current-menu="lunchMenu" :is-full-page="true" />
+        <div v-else class="no-menu-message">
+          No lunch menu available at this time.
         </div>
       </div>
     </section>
@@ -85,43 +34,49 @@
         <h2 class="section-title">À La Carte Menu</h2>
         <p class="section-description text-center">Our regular menu is available daily from 17:00 to 22:00</p>
         
-        <!-- Menu filters -->
-        <div class="menu-filters">
-          <div class="tag-filters">
-            <span>Dietary Preferences:</span>
-            <button 
-              v-for="tag in tags" 
-              :key="tag.id" 
-              @click="toggleTagFilter(tag.id)"
-              :class="['tag-filter', { active: activeTagFilters.includes(tag.id) }]">
-              {{ tag.name }}
-            </button>
-          </div>
+        <div v-if="menuDataPending" class="loading-indicator">Loading menu data...</div>
+        <div v-else-if="menuDataError" class="error-message">
+          Error loading menu data. Please try again later.
         </div>
-
-        <!-- Menu categories -->
-        <div v-for="category in sortedCategories" :key="category.id" class="menu-category">
-          <h3 class="category-title">{{ category.name }}</h3>
-          <p class="category-description">{{ category.description }}</p>
-          
-          <div class="menu-items grid grid-2">
-            <div 
-              v-for="item in getFilteredItemsByCategory(category.id)" 
-              :key="item.id" 
-              class="menu-item">
-              <div class="menu-item-header">
-                <h4 class="menu-item-name">{{ item.name }}</h4>
-                <span class="menu-item-price">€{{ item.price.toFixed(2) }}</span>
-              </div>
-              <p class="menu-item-description">{{ item.description }}</p>
-              <div class="menu-item-tags">
-                <span v-for="tagId in item.tags" :key="tagId" class="menu-item-tag">
-                  {{ getTagName(tagId) }}
-                </span>
+        <template v-else>
+          <!-- Menu filters -->
+          <div class="menu-filters">
+            <div class="tag-filters">
+              <span>Dietary Preferences:</span>
+              <button 
+                v-for="tag in tags" 
+                :key="tag.id" 
+                @click="toggleTagFilter(tag.id)"
+                :class="['tag-filter', { active: activeTagFilters.includes(tag.id) }]">
+                {{ tag.name }}
+              </button>
+            </div>
+          </div>
+  
+          <!-- Menu categories -->
+          <div v-for="category in sortedCategories" :key="category.id" class="menu-category">
+            <h3 class="category-title">{{ category.name }}</h3>
+            <p class="category-description">{{ category.description }}</p>
+            
+            <div class="menu-items grid grid-2">
+              <div 
+                v-for="item in getFilteredItemsByCategory(category.id)" 
+                :key="item._path" 
+                class="menu-item">
+                <div class="menu-item-header">
+                  <h4 class="menu-item-name">{{ item.name }}</h4>
+                  <span class="menu-item-price">€{{ item.price.toFixed(2) }}</span>
+                </div>
+                <p class="menu-item-description">{{ item.description }}</p>
+                <div class="menu-item-tags">
+                  <span v-for="tagId in item.tags" :key="tagId" class="menu-item-tag">
+                    {{ getTagName(tagId) }}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </template>
       </div>
     </section>
     </div>
@@ -130,124 +85,51 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { useRestaurantContent } from '~/composables/useContent';
 
-// Type definitions without i18n content
-const categories = ref([
-  { id: 'pizza', name: 'Pizza', description: 'Our stone-baked pizzas', order: 1 },
-  { id: 'pasta', name: 'Pasta', description: 'Homemade pasta dishes', order: 2 },
-  { id: 'salads', name: 'Salads', description: 'Fresh seasonal salads', order: 3 },
-  { id: 'desserts', name: 'Desserts', description: 'Sweet treats', order: 4 }
-]);
+const { getMenuCategories, getMenuTags, getMenuItems, getLatestLunchMenu } = useRestaurantContent();
 
-const tags = ref([
-  { id: 'vegetarian', name: 'Vegetarian', icon: 'leaf' },
-  { id: 'vegan', name: 'Vegan', icon: 'plant' },
-  { id: 'spicy', name: 'Spicy', icon: 'fire' },
-  { id: 'gluten-free', name: 'Gluten-Free', icon: 'wheat-slash' }
-]);
-
-const menuItems = ref([
-  {
-    id: 'margherita',
-    name: 'Margherita Pizza',
-    description: 'Classic pizza with tomato sauce, mozzarella, and fresh basil',
-    price: 10.90,
-    category: 'pizza',
-    tags: ['vegetarian'],
-    order: 1
-  },
-  {
-    id: 'diavola',
-    name: 'Diavola Pizza',
-    description: 'Spicy pizza with tomato sauce, mozzarella, and spicy salami',
-    price: 12.90,
-    category: 'pizza',
-    tags: ['spicy'],
-    order: 2
-  },
-  {
-    id: 'vegetariana',
-    name: 'Vegetariana Pizza',
-    description: 'Veggie pizza with tomato sauce, mozzarella, and seasonal vegetables',
-    price: 11.90,
-    category: 'pizza',
-    tags: ['vegetarian', 'vegan'],
-    order: 3
-  },
-  {
-    id: 'carbonara',
-    name: 'Spaghetti Carbonara',
-    description: 'Spaghetti with creamy egg sauce, pancetta, and pecorino cheese',
-    price: 13.90,
-    category: 'pasta',
-    tags: [],
-    order: 1
-  },
-  {
-    id: 'bolognese',
-    name: 'Tagliatelle Bolognese',
-    description: 'Tagliatelle with rich meat ragù and parmesan',
-    price: 14.90,
-    category: 'pasta',
-    tags: [],
-    order: 2
-  },
-  {
-    id: 'arrabbiata',
-    name: 'Penne Arrabbiata',
-    description: 'Penne with spicy tomato sauce and garlic',
-    price: 12.90,
-    category: 'pasta',
-    tags: ['vegetarian', 'vegan', 'spicy'],
-    order: 3
-  },
-  {
-    id: 'caesar',
-    name: 'Caesar Salad',
-    description: 'Romaine lettuce with Caesar dressing, croutons, and parmesan',
-    price: 9.90,
-    category: 'salads',
-    tags: ['vegetarian'],
-    order: 1
-  },
-  {
-    id: 'greek',
-    name: 'Greek Salad',
-    description: 'Fresh salad with tomatoes, cucumber, feta cheese, and olives',
-    price: 8.90,
-    category: 'salads',
-    tags: ['vegetarian', 'gluten-free'],
-    order: 2
-  },
-  {
-    id: 'tiramisu',
-    name: 'Tiramisu',
-    description: 'Classic Italian dessert with coffee-soaked ladyfingers and mascarpone cream',
-    price: 6.90,
-    category: 'desserts',
-    tags: ['vegetarian'],
-    order: 1
-  },
-  {
-    id: 'pannacotta',
-    name: 'Panna Cotta',
-    description: 'Creamy vanilla dessert with berry sauce',
-    price: 5.90,
-    category: 'desserts',
-    tags: ['vegetarian', 'gluten-free'],
-    order: 2
-  },
-]);
-
+// Active tag filters state
 const activeTagFilters = ref([]);
+
+// Fetch menu categories
+const { data: categories, pending: categoriesPending, error: categoriesError } = useAsyncData(
+  'menu-categories', 
+  () => getMenuCategories()
+);
+
+// Fetch menu tags
+const { data: tags, pending: tagsPending, error: tagsError } = useAsyncData(
+  'menu-tags', 
+  () => getMenuTags()
+);
+
+// Fetch menu items
+const { data: menuItems, pending: menuItemsPending, error: menuItemsError } = useAsyncData(
+  'menu-items', 
+  () => getMenuItems()
+);
+
+// Fetch latest lunch menu
+const { data: lunchMenu, pending: lunchMenuPending, error: lunchMenuError } = useAsyncData(
+  'latest-lunch-menu', 
+  () => getLatestLunchMenu()
+);
+
+// Computed values for loading states
+const menuDataPending = computed(() => categoriesPending.value || tagsPending.value || menuItemsPending.value);
+const menuDataError = computed(() => categoriesError.value || tagsError.value || menuItemsError.value);
 
 // Sort categories by order
 const sortedCategories = computed(() => {
+  if (!categories.value) return [];
   return [...categories.value].sort((a, b) => a.order - b.order);
 });
 
 // Get items for a specific category
 const getFilteredItemsByCategory = (categoryId) => {
+  if (!menuItems.value) return [];
+  
   let items = menuItems.value
     .filter(item => item.category === categoryId)
     .sort((a, b) => a.order - b.order);
@@ -255,7 +137,7 @@ const getFilteredItemsByCategory = (categoryId) => {
   // Apply tag filters if any are active
   if (activeTagFilters.value.length > 0) {
     items = items.filter(item => 
-      activeTagFilters.value.every(tagId => item.tags.includes(tagId))
+      activeTagFilters.value.every(tagId => item.tags && item.tags.includes(tagId))
     );
   }
   
@@ -274,6 +156,7 @@ const toggleTagFilter = (tagId) => {
 
 // Get tag name by ID
 const getTagName = (tagId) => {
+  if (!tags.value) return '';
   const tag = tags.value.find(tag => tag.id === tagId);
   return tag ? tag.name : '';
 };

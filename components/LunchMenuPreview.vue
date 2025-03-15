@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { computed } from 'vue';
 
 interface MenuItem {
   day: string;
@@ -53,91 +53,16 @@ const props = defineProps({
   isFullPage: {
     type: Boolean,
     default: false
+  },
+  currentMenu: {
+    type: Object as () => LunchMenu,
+    required: true
   }
-});
-
-// Sample data since we removed i18n functionality
-const currentMenu = ref<LunchMenu>({
-  startDate: "2025-03-18",
-  endDate: "2025-03-22",
-  title: "Spring Special Week",
-  items: [
-    {
-      day: "Monday",
-      name: "Mushroom Risotto",
-      description: "Creamy arborio rice with seasonal mushrooms",
-      price: 9.90,
-      order: 1
-    },
-    {
-      day: "Monday",
-      name: "Tomato Soup",
-      description: "Classic tomato soup with basil and croutons",
-      price: 6.90,
-      order: 2
-    },
-    {
-      day: "Tuesday",
-      name: "Chicken Curry",
-      description: "Tender chicken pieces in a mild curry sauce with rice",
-      price: 10.90,
-      order: 1
-    },
-    {
-      day: "Tuesday",
-      name: "Vegetable Quiche",
-      description: "Homemade quiche with seasonal vegetables and a side salad",
-      price: 8.90,
-      order: 2
-    },
-    {
-      day: "Wednesday",
-      name: "Beef Stroganoff",
-      description: "Tender beef strips in a creamy mushroom sauce with pasta",
-      price: 12.90,
-      order: 1
-    },
-    {
-      day: "Wednesday",
-      name: "Greek Salad",
-      description: "Fresh vegetables with feta cheese and olives",
-      price: 7.90,
-      order: 2
-    },
-    {
-      day: "Thursday",
-      name: "Fish & Chips",
-      description: "Battered cod with crispy fries and tartar sauce",
-      price: 11.90,
-      order: 1
-    },
-    {
-      day: "Thursday",
-      name: "Minestrone Soup",
-      description: "Italian vegetable soup with pasta and beans",
-      price: 6.90,
-      order: 2
-    },
-    {
-      day: "Friday",
-      name: "Lasagna",
-      description: "Homemade beef lasagna with a side salad",
-      price: 10.90,
-      order: 1
-    },
-    {
-      day: "Friday",
-      name: "Caprese Salad",
-      description: "Tomatoes, mozzarella, basil, and balsamic glaze",
-      price: 8.90,
-      order: 2
-    }
-  ]
 });
 
 // Group menu items by day
 const groupedMenuItems = computed(() => {
-  if (!currentMenu.value || !currentMenu.value.items) {
+  if (!props.currentMenu || !props.currentMenu.items) {
     return [];
   }
   
@@ -147,7 +72,7 @@ const groupedMenuItems = computed(() => {
   let daysToShow = props.isFullPage ? days : days.slice(0, 3);
   
   return daysToShow.map(day => {
-    const dayItems = currentMenu.value!.items
+    const dayItems = props.currentMenu.items
       .filter(item => item.day === day)
       .sort((a, b) => a.order - b.order);
     

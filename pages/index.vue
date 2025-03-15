@@ -8,7 +8,14 @@
       <section class="section">
         <div class="container">
           <h2 class="section-title">This Week's Lunch Specials</h2>
-          <LunchMenuPreview />
+          <div v-if="lunchMenuPending" class="loading-indicator">Loading lunch menu...</div>
+          <div v-else-if="lunchMenuError" class="error-message">
+            Error loading lunch menu. Please try again later.
+          </div>
+          <LunchMenuPreview v-else-if="lunchMenu" :current-menu="lunchMenu" />
+          <div v-else class="no-menu-message">
+            No lunch menu available at this time.
+          </div>
         </div>
       </section>
 
@@ -31,7 +38,14 @@
 </template>
 
 <script setup lang="ts">
-// No specific script needed as components handle their own functionality
+import { useRestaurantContent } from '~/composables/useContent';
+
+// Fetch the latest lunch menu
+const { getLatestLunchMenu } = useRestaurantContent();
+const { data: lunchMenu, pending: lunchMenuPending, error: lunchMenuError } = useAsyncData(
+  'homepage-lunch-menu', 
+  () => getLatestLunchMenu()
+);
 </script>
 
 <style scoped>
