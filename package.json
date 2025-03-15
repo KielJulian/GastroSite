@@ -6,16 +6,19 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview"
+    "preview": "nuxt preview",
+    "vercel-build": "./vercel-build.sh"
   },
-  "devDependencies": {
+  "dependencies": {
     "@nuxt/content": "^2.12.0",
-    "@nuxt/devtools": "latest",
     "@nuxthq/studio": "^2.2.1",
     "@nuxtjs/i18n": "^8.1.1",
     "nuxt": "^3.10.0",
-    "typescript": "^5.3.3",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5"
+  },
+  "devDependencies": {
+    "@nuxt/devtools": "latest",
+    "typescript": "^5.3.3"
   }
 }

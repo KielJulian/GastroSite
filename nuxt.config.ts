@@ -1,9 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: { enabled: process.env.NODE_ENV === 'development' },
 
   typescript: {
-    strict: true
+    strict: true,
+    typeCheck: true,
+    shim: false
   },
 
   modules: [
@@ -12,8 +14,9 @@ export default defineNuxtConfig({
     '@nuxthq/studio'
   ],
 
-  // Fix for prerendering errors
+  // Vercel-specific Nitro config
   nitro: {
+    preset: process.env.NITRO_PRESET || 'vercel',
     prerender: {
       failOnError: false, // Don't fail on prerender errors
       ignore: ['/api/**'] // Skip API routes during prerendering
