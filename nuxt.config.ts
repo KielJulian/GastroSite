@@ -16,7 +16,7 @@ export default defineNuxtConfig({
 
   // Vercel-specific Nitro config
   nitro: {
-    preset: process.env.NITRO_PRESET || 'vercel',
+    preset: 'vercel',
     prerender: {
       failOnError: false, // Don't fail on prerender errors
       ignore: ['/api/**'] // Skip API routes during prerendering
@@ -40,6 +40,10 @@ export default defineNuxtConfig({
     experimental: {
       clientDB: true,
       stripQueryParameters: true
+    },
+    contentTypes: {
+      'menu': { type: 'yaml', navigation: true },
+      'team': { navigation: true }
     }
   },
 
