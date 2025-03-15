@@ -1,10 +1,6 @@
 ---
-name:
-  en: "Tiramisu"
-  de: "Tiramisu"
-description:
-  en: "Traditional Italian dessert with layers of coffee-soaked ladyfingers and mascarpone cream"
-  de: "Traditionelles italienisches Dessert mit Schichten aus kaffeegetränkten Löffelbiskuits und Mascarpone-Creme"
+name: "Tiramisu"
+description: "Traditional Italian dessert with layers of coffee-soaked ladyfingers and mascarpone cream"
 price: 8.5
 category: desserts
 tags: ["vegetarian"]

@@ -1,10 +1,6 @@
 ---
-name:
-  en: Margherita Pizza
-  de: Pizza Margherita
-description:
-  en: Classic pizza with tomato sauce, mozzarella, and fresh basil
-  de: Klassische Pizza mit Tomatensauce, Mozzarella und frischem Basilikum
+name: Margherita Pizza
+description: Classic pizza with tomato sauce, mozzarella, and fresh basil
 price: 13.4
 category: pizza
 tags:

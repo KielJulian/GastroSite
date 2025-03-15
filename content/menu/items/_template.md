@@ -4,21 +4,17 @@
 # You can copy this file and rename it to create a new menu item.
 # Please fill in all the required fields below.
 
-name:
-  en: "Item Name in English" # Required: Name of the dish in English
-  de: "Item Name in German"  # Required: Name of the dish in German
+name: "Item Name" # Required: Name of the dish
 
-description:
-  en: "Detailed description of the dish in English" # Required: Description in English
-  de: "Detailed description of the dish in German"  # Required: Description in German
+description: "Detailed description of the dish" # Required: Description
 
 price: 0.0 # Required: Price in EUR, use decimal point (e.g., 12.5)
 
-# Required: Menu category - must match one of the category IDs from menu/categories/en.yaml
+# Required: Menu category - must match one of the category IDs from menu/categories/categories.yaml
 # Available categories: pizza, pasta, salads, desserts
 category: "" 
 
-# Optional: Tags for dietary preferences - must match tag IDs from menu/tags/en.yaml
+# Optional: Tags for dietary preferences - must match tag IDs from menu/tags/tags.yaml
 # Available tags: vegetarian, vegan, spicy, gluten-free
 # Use empty array [] if no tags apply
 tags: [] 

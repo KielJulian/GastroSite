@@ -10,7 +10,6 @@ export default defineNuxtConfig({
 
   modules: [
     '@nuxt/content',
-    '@nuxtjs/i18n',
     '@nuxthq/studio'
   ],
 
@@ -27,22 +26,6 @@ export default defineNuxtConfig({
 
   content: {},
 
-  i18n: {
-    // Nuxt i18n configuration
-    locales: [
-      {
-        code: 'en',
-        name: 'English'
-      },
-      {
-        code: 'de',
-        name: 'Deutsch'
-      }
-    ],
-    defaultLocale: 'en',
-    strategy: 'prefix',
-    vueI18n: './i18n.config.ts'
-  },
 
   app: {
     head: {

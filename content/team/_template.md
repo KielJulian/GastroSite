@@ -7,15 +7,11 @@
 # Required: Full name of the team member
 name: "Full Name"
 
-# Required: Job position in both languages
-position:
-  en: "Position Title in English"
-  de: "Position Title in German"
+# Required: Job position
+position: "Position Title"
 
-# Required: Brief biography in both languages
-bio:
-  en: "A short biography of the team member in English. Describe their experience, background, specialties, and what makes them unique."
-  de: "A short biography of the team member in German. Describe their experience, background, specialties, and what makes them unique."
+# Required: Brief biography
+bio: "A short biography of the team member. Describe their experience, background, specialties, and what makes them unique."
 
 # Required: Path to the profile image (must be in /public/images/team/)
 # The recommended image size is 500x500 pixels or similar aspect ratio

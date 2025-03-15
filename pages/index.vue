@@ -7,7 +7,7 @@
       <!-- Lunch Menu Section -->
       <section class="section">
         <div class="container">
-          <h2 class="section-title">{{ $t('home.lunchMenu.title') }}</h2>
+          <h2 class="section-title">This Week's Lunch Specials</h2>
           <LunchMenuPreview />
         </div>
       </section>
@@ -15,8 +15,8 @@
       <!-- Team Section -->
       <section class="section">
         <div class="container">
-          <h2 class="section-title">{{ $t('home.team.title') }}</h2>
-          <p class="section-description text-center">{{ $t('home.team.description') }}</p>
+          <h2 class="section-title">Our Team</h2>
+          <p class="section-description text-center">Meet the culinary experts who make the magic happen in our kitchen.</p>
           <TeamGrid />
         </div>
       </section>

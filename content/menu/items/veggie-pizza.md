@@ -1,10 +1,6 @@
 ---
-name:
-  en: "Vegetable Supreme Pizza"
-  de: "Gemüse Supreme Pizza"
-description:
-  en: "Loaded with fresh seasonal vegetables, mushrooms, and our signature tomato sauce"
-  de: "Beladen mit frischem Saisongemüse, Pilzen und unserer Signatur-Tomatensauce"
+name: "Vegetable Supreme Pizza"
+description: "Loaded with fresh seasonal vegetables, mushrooms, and our signature tomato sauce"
 price: 14.9
 category: pizza
 tags: ["vegetarian", "vegan"]

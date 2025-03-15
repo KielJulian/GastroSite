@@ -1,10 +1,6 @@
 ---
-name:
-  en: "Caesar Salad"
-  de: "Caesar Salat"
-description:
-  en: "Crisp romaine lettuce, croutons, Parmesan cheese, and our homemade Caesar dressing"
-  de: "Knackiger Romanasalat, Croutons, Parmesankäse und unser hausgemachtes Caesar-Dressing"
+name: "Caesar Salad"
+description: "Crisp romaine lettuce, croutons, Parmesan cheese, and our homemade Caesar dressing"
 price: 10.5
 category: salads
 tags: []

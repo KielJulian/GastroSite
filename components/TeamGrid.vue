@@ -10,32 +10,24 @@
           <div class="placeholder-image"></div>
         </div>
         <h3 class="team-member-name">{{ member.name }}</h3>
-        <p class="team-member-position">{{ member.position[$i18n.locale] }}</p>
-        <p class="team-member-bio">{{ member.bio[$i18n.locale] }}</p>
+        <p class="team-member-position">{{ member.position }}</p>
+        <p class="team-member-bio">{{ member.bio }}</p>
       </div>
     </div>
     <div v-else class="team-loading">
-      <p>{{ $t('general.loading') }}</p>
+      <p>Loading...</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useRestaurantContent } from '~/composables/useContent';
-
-// Type definitions for i18n content
-interface LocalizedText {
-  en: string;
-  de: string;
-  [key: string]: string; // Allow any string as key for dynamic locale access
-}
 
 interface TeamMember {
   id: string;
   name: string;
-  position: LocalizedText;
-  bio: LocalizedText;
+  position: string;
+  bio: string;
   image: string;
   order: number;
 }
@@ -47,14 +39,49 @@ const props = defineProps({
   }
 });
 
-// Use the content composable to fetch team members
-const { getTeamMembers } = useRestaurantContent();
-const teamMembers = ref<TeamMember[]>([]);
-
-// Fetch team members on component mount
-onMounted(async () => {
-  teamMembers.value = await getTeamMembers();
-});
+// Sample data since we removed i18n functionality
+const teamMembers = ref<TeamMember[]>([
+  {
+    id: 'jane-doe',
+    name: 'Jane Doe',
+    position: 'Head Chef',
+    bio: 'Jane has 15 years of experience in the culinary world, specializing in Italian cuisine. She has worked in Michelin-starred restaurants across Europe before joining our team.',
+    image: '/images/team/jane-doe.jpg',
+    order: 1
+  },
+  {
+    id: 'john-smith',
+    name: 'John Smith',
+    position: 'Sous Chef',
+    bio: 'John trained at the Culinary Institute of America and specializes in modern European cuisine. He brings creative flair to our seasonal menu items.',
+    image: '/images/team/john-smith.jpg',
+    order: 2
+  },
+  {
+    id: 'maria-garcia',
+    name: 'Maria Garcia',
+    position: 'Pastry Chef',
+    bio: 'Maria is a master of sweet creations with a background in French pastry. Her desserts combine traditional techniques with innovative flavor combinations.',
+    image: '/images/team/maria-garcia.jpg',
+    order: 3
+  },
+  {
+    id: 'thomas-mueller',
+    name: 'Thomas Müller',
+    position: 'Restaurant Manager',
+    bio: 'Thomas has a degree in hospitality management and oversees all operations of the restaurant. He ensures that every guest has an exceptional dining experience.',
+    image: '/images/team/thomas-mueller.jpg',
+    order: 4
+  },
+  {
+    id: 'sophia-chen',
+    name: 'Sophia Chen',
+    position: 'Sommelier',
+    bio: 'Sophia is our wine expert with certification from the Court of Master Sommeliers. She has curated our wine selection to perfectly complement our menu.',
+    image: '/images/team/sophia-chen.jpg',
+    order: 5
+  }
+]);
 
 // Sort and limit team members
 const limitedTeamMembers = computed(() => {

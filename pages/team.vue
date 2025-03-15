@@ -5,8 +5,8 @@
       <section class="hero team-hero">
         <div class="container">
           <div class="hero-content">
-            <h1>{{ $t('team.hero.title') }}</h1>
-            <p>{{ $t('team.hero.subtitle') }}</p>
+            <h1>Our Team</h1>
+            <p>Meet the culinary experts who make the magic happen in our kitchen</p>
           </div>
         </div>
       </section>
@@ -25,8 +25,8 @@
                   <img :src="member.image" :alt="member.name">
                 </div>
                 <h3 class="team-member-name">{{ member.name }}</h3>
-                <p class="team-member-position">{{ member.position[$i18n.locale] }}</p>
-                <p class="team-member-bio">{{ member.bio[$i18n.locale] }}</p>
+                <p class="team-member-position">{{ member.position }}</p>
+                <p class="team-member-bio">{{ member.bio }}</p>
               </div>
             </div>
           </div>
@@ -43,70 +43,40 @@ const teamMembers = ref([
   {
     id: 'jane-doe',
     name: 'Jane Doe',
-    position: {
-      en: 'Head Chef',
-      de: 'Küchenchef'
-    },
-    bio: {
-      en: 'Jane has 15 years of experience in the culinary world, specializing in Italian cuisine. She has worked in Michelin-starred restaurants across Europe before joining our team.',
-      de: 'Jane hat 15 Jahre Erfahrung in der kulinarischen Welt und ist auf die italienische Küche spezialisiert. Sie hat in Michelin-Restaurants in ganz Europa gearbeitet, bevor sie zu unserem Team kam.'
-    },
+    position: 'Head Chef',
+    bio: 'Jane has 15 years of experience in the culinary world, specializing in Italian cuisine. She has worked in Michelin-starred restaurants across Europe before joining our team.',
     image: '/images/team/jane-doe.jpg',
     order: 1
   },
   {
     id: 'john-smith',
     name: 'John Smith',
-    position: {
-      en: 'Sous Chef',
-      de: 'Souschef'
-    },
-    bio: {
-      en: 'John trained at the Culinary Institute of America and specializes in modern European cuisine. He brings creative flair to our seasonal menu items.',
-      de: 'John wurde am Culinary Institute of America ausgebildet und ist auf moderne europäische Küche spezialisiert. Er bringt kreativen Flair in unsere saisonalen Menüpunkte.'
-    },
+    position: 'Sous Chef',
+    bio: 'John trained at the Culinary Institute of America and specializes in modern European cuisine. He brings creative flair to our seasonal menu items.',
     image: '/images/team/john-smith.jpg',
     order: 2
   },
   {
     id: 'maria-garcia',
     name: 'Maria Garcia',
-    position: {
-      en: 'Pastry Chef',
-      de: 'Konditorin'
-    },
-    bio: {
-      en: 'Maria is a master of sweet creations with a background in French pastry. Her desserts combine traditional techniques with innovative flavor combinations.',
-      de: 'Maria ist eine Meisterin süßer Kreationen mit Hintergrund in der französischen Konditorei. Ihre Desserts kombinieren traditionelle Techniken mit innovativen Geschmackskombinationen.'
-    },
+    position: 'Pastry Chef',
+    bio: 'Maria is a master of sweet creations with a background in French pastry. Her desserts combine traditional techniques with innovative flavor combinations.',
     image: '/images/team/maria-garcia.jpg',
     order: 3
   },
   {
     id: 'thomas-mueller',
     name: 'Thomas Müller',
-    position: {
-      en: 'Restaurant Manager',
-      de: 'Restaurantleiter'
-    },
-    bio: {
-      en: 'Thomas has a degree in hospitality management and oversees all operations of the restaurant. He ensures that every guest has an exceptional dining experience.',
-      de: 'Thomas hat einen Abschluss in Hospitality Management und überwacht alle Abläufe des Restaurants. Er sorgt dafür, dass jeder Gast ein außergewöhnliches Esserlebnis hat.'
-    },
+    position: 'Restaurant Manager',
+    bio: 'Thomas has a degree in hospitality management and oversees all operations of the restaurant. He ensures that every guest has an exceptional dining experience.',
     image: '/images/team/thomas-mueller.jpg',
     order: 4
   },
   {
     id: 'sophia-chen',
     name: 'Sophia Chen',
-    position: {
-      en: 'Sommelier',
-      de: 'Sommelière'
-    },
-    bio: {
-      en: 'Sophia is our wine expert with certification from the Court of Master Sommeliers. She has curated our wine selection to perfectly complement our menu.',
-      de: 'Sophia ist unsere Weinexpertin mit Zertifizierung vom Court of Master Sommeliers. Sie hat unsere Weinauswahl zusammengestellt, um unser Menü perfekt zu ergänzen.'
-    },
+    position: 'Sommelier',
+    bio: 'Sophia is our wine expert with certification from the Court of Master Sommeliers. She has curated our wine selection to perfectly complement our menu.',
     image: '/images/team/sophia-chen.jpg',
     order: 5
   }

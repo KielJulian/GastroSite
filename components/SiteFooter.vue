@@ -4,11 +4,11 @@
       <div class="grid grid-1">
         <div class="footer-col text-center">
           <h3>GastroSite</h3>
-          <p>{{ $t('footer.description') }}</p>
+          <p>GastroSite offers authentic cuisine in a cozy atmosphere. Visit us and enjoy a culinary journey.</p>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; {{ new Date().getFullYear() }} GastroSite. {{ $t('footer.allRightsReserved') }}</p>
+        <p>&copy; {{ new Date().getFullYear() }} GastroSite. All rights reserved</p>
       </div>
     </div>
   </footer>

@@ -1,7 +1,7 @@
 <template>
   <div class="lunch-menu" v-if="currentMenu">
     <div class="lunch-menu-header">
-      <h3 class="lunch-menu-title">{{ currentMenu.title && currentMenu.title[$i18n.locale] }}</h3>
+      <h3 class="lunch-menu-title">{{ currentMenu.title }}</h3>
       <p class="lunch-menu-dates">{{ formatDateRange(currentMenu.startDate, currentMenu.endDate) }}</p>
     </div>
     
@@ -10,42 +10,34 @@
         v-for="(dayGroup, index) in groupedMenuItems" 
         :key="index" 
         class="lunch-menu-day">
-        <h4 class="day-title">{{ $t(`days.${dayGroup.day.toLowerCase()}`) }}</h4>
+        <h4 class="day-title">{{ dayGroup.day }}</h4>
         <div class="day-items">
           <div 
             v-for="item in dayGroup.items" 
             :key="item.order" 
             class="lunch-menu-item">
             <div class="item-header">
-              <h5 class="item-name">{{ item.name[$i18n.locale] }}</h5>
+              <h5 class="item-name">{{ item.name }}</h5>
               <span class="item-price">€{{ item.price.toFixed(2) }}</span>
             </div>
-            <p class="item-description">{{ item.description[$i18n.locale] }}</p>
+            <p class="item-description">{{ item.description }}</p>
           </div>
         </div>
       </div>
     </div>
   </div>
   <div v-else class="lunch-menu-loading">
-    <p>{{ $t('general.loading') }}</p>
+    <p>Loading content...</p>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useRestaurantContent } from '~/composables/useContent';
-
-// Type definitions for i18n content
-interface LocalizedText {
-  en: string;
-  de: string;
-  [key: string]: string; // Allow any string as key for dynamic locale access
-}
 
 interface MenuItem {
   day: string;
-  name: LocalizedText;
-  description: LocalizedText;
+  name: string;
+  description: string;
   price: number;
   order: number;
 }
@@ -53,7 +45,7 @@ interface MenuItem {
 interface LunchMenu {
   startDate: string;
   endDate: string;
-  title: LocalizedText;
+  title: string;
   items: MenuItem[];
 }
 
@@ -64,13 +56,83 @@ const props = defineProps({
   }
 });
 
-// Use the content composable to fetch lunch menu
-const { getLatestLunchMenu } = useRestaurantContent();
-const currentMenu = ref<LunchMenu | null>(null);
-
-// Fetch lunch menu on component mount
-onMounted(async () => {
-  currentMenu.value = await getLatestLunchMenu();
+// Sample data since we removed i18n functionality
+const currentMenu = ref<LunchMenu>({
+  startDate: "2025-03-18",
+  endDate: "2025-03-22",
+  title: "Spring Special Week",
+  items: [
+    {
+      day: "Monday",
+      name: "Mushroom Risotto",
+      description: "Creamy arborio rice with seasonal mushrooms",
+      price: 9.90,
+      order: 1
+    },
+    {
+      day: "Monday",
+      name: "Tomato Soup",
+      description: "Classic tomato soup with basil and croutons",
+      price: 6.90,
+      order: 2
+    },
+    {
+      day: "Tuesday",
+      name: "Chicken Curry",
+      description: "Tender chicken pieces in a mild curry sauce with rice",
+      price: 10.90,
+      order: 1
+    },
+    {
+      day: "Tuesday",
+      name: "Vegetable Quiche",
+      description: "Homemade quiche with seasonal vegetables and a side salad",
+      price: 8.90,
+      order: 2
+    },
+    {
+      day: "Wednesday",
+      name: "Beef Stroganoff",
+      description: "Tender beef strips in a creamy mushroom sauce with pasta",
+      price: 12.90,
+      order: 1
+    },
+    {
+      day: "Wednesday",
+      name: "Greek Salad",
+      description: "Fresh vegetables with feta cheese and olives",
+      price: 7.90,
+      order: 2
+    },
+    {
+      day: "Thursday",
+      name: "Fish & Chips",
+      description: "Battered cod with crispy fries and tartar sauce",
+      price: 11.90,
+      order: 1
+    },
+    {
+      day: "Thursday",
+      name: "Minestrone Soup",
+      description: "Italian vegetable soup with pasta and beans",
+      price: 6.90,
+      order: 2
+    },
+    {
+      day: "Friday",
+      name: "Lasagna",
+      description: "Homemade beef lasagna with a side salad",
+      price: 10.90,
+      order: 1
+    },
+    {
+      day: "Friday",
+      name: "Caprese Salad",
+      description: "Tomatoes, mozzarella, basil, and balsamic glaze",
+      price: 8.90,
+      order: 2
+    }
+  ]
 });
 
 // Group menu items by day

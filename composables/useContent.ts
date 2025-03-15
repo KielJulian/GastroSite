@@ -1,9 +1,7 @@
-import { useI18n } from 'vue-i18n';
 import { useNuxtApp } from '#app';
 import { useAsyncData } from '#app';
 
 export const useRestaurantContent = () => {
-  const { locale } = useI18n();
   const nuxtApp = useNuxtApp();
 
   /**
@@ -11,20 +9,19 @@ export const useRestaurantContent = () => {
    */
   const getMenuCategories = async () => {
     try {
-      const localeStr = locale.value;
-      const path = `/menu/categories/${localeStr}`;
-      // Use $content() instead of queryContent
-      const data = await useAsyncData(`menu-categories-${localeStr}`, () => {
+      const path = `/menu/categories`;
+      const data = await useAsyncData(`menu-categories`, () => {
         // @ts-ignore
         return $fetch(`/api/_content${path}`)
       });
       
-      if (!data.data.value || !data.data.value.categories) {
+      if (!data.data.value) {
         console.error(`No categories found at ${path}`);
         return [];
       }
       
-      return [...data.data.value.categories].sort((a, b) => a.order - b.order);
+      // Simplified since we removed i18n
+      return data.data.value;
     } catch (error) {
       console.error('Error fetching menu categories:', error);
       return [];
@@ -36,19 +33,18 @@ export const useRestaurantContent = () => {
    */
   const getMenuTags = async () => {
     try {
-      const localeStr = locale.value;
-      const path = `/menu/tags/${localeStr}`;
-      const data = await useAsyncData(`menu-tags-${localeStr}`, () => {
+      const path = `/menu/tags`;
+      const data = await useAsyncData(`menu-tags`, () => {
         // @ts-ignore
         return $fetch(`/api/_content${path}`)
       });
       
-      if (!data.data.value || !data.data.value.tags) {
+      if (!data.data.value) {
         console.error(`No tags found at ${path}`);
         return [];
       }
       
-      return data.data.value.tags;
+      return data.data.value;
     } catch (error) {
       console.error('Error fetching menu tags:', error);
       return [];
@@ -71,27 +67,8 @@ export const useRestaurantContent = () => {
         return [];
       }
       
-      const items = data.data.value;
-      
-      // Filter by category if specified
-      let filteredItems = categoryId
-        ? items.filter(item => item.category === categoryId)
-        : items;
-      
-      // Filter by tags if specified
-      if (tagIds && tagIds.length > 0) {
-        filteredItems = filteredItems.filter(item => 
-          tagIds.every(tagId => item.tags && item.tags.includes(tagId))
-        );
-      }
-      
-      // Sort by order
-      return filteredItems.sort((a, b) => {
-        // Handle missing order values
-        const orderA = a.order !== undefined ? a.order : Infinity;
-        const orderB = b.order !== undefined ? b.order : Infinity;
-        return orderA - orderB;
-      });
+      // Simplified since we removed i18n
+      return data.data.value;
     } catch (error) {
       console.error('Error fetching menu items:', error);
       return [];
@@ -114,28 +91,8 @@ export const useRestaurantContent = () => {
         return null;
       }
       
-      const menus = data.data.value;
-      
-      if (!menus.length) {
-        return null;
-      }
-      
-      const now = new Date();
-      const currentDate = now.toISOString().split('T')[0];
-      
-      // Find active menu (where currentDate is between startDate and endDate)
-      let activeMenu = menus.find(menu => 
-        menu.startDate <= currentDate && menu.endDate >= currentDate
-      );
-      
-      // If no active menu, get the most recent one
-      if (!activeMenu) {
-        activeMenu = [...menus].sort((a, b) => 
-          new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
-        )[0];
-      }
-      
-      return activeMenu;
+      // Simplified since we removed i18n
+      return data.data.value;
     } catch (error) {
       console.error('Error fetching lunch menus:', error);
       return null;
@@ -158,22 +115,8 @@ export const useRestaurantContent = () => {
         return [];
       }
       
-      const members = data.data.value;
-      
-      // Sort by order
-      let sortedMembers = [...members].sort((a, b) => {
-        // Handle missing order values
-        const orderA = a.order !== undefined ? a.order : Infinity;
-        const orderB = b.order !== undefined ? b.order : Infinity;
-        return orderA - orderB;
-      });
-      
-      // Apply limit if specified
-      if (limit && limit > 0) {
-        sortedMembers = sortedMembers.slice(0, limit);
-      }
-      
-      return sortedMembers;
+      // Simplified since we removed i18n
+      return data.data.value;
     } catch (error) {
       console.error('Error fetching team members:', error);
       return [];
@@ -190,18 +133,6 @@ export const useRestaurantContent = () => {
     // This would connect to your API to update the order in the CMS
     // Implementation depends on your backend setup
     console.log(`Updating order for ${collection}`, items);
-    
-    // In a real app, you would update the order in the CMS
-    // Example implementation:
-    /*
-    await $fetch('/api/content/update-order', {
-      method: 'POST',
-      body: {
-        collection,
-        items
-      }
-    });
-    */
   };
 
   return {

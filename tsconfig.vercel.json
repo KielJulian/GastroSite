@@ -12,7 +12,6 @@
     "lib": ["ESNext", "DOM"],
     "types": [
       "@nuxt/content",
-      "@nuxtjs/i18n",
       "node"
     ],
     "paths": {

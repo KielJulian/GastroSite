@@ -1,8 +1,8 @@
 <template>
   <section class="section rooms-section">
     <div class="container">
-      <h2 class="section-title">{{ $t('home.rooms.title') }}</h2>
-      <p class="section-description text-center">{{ $t('home.rooms.description') }}</p>
+      <h2 class="section-title">Our Dining Areas</h2>
+      <p class="section-description text-center">Discover our different dining areas, each with its own unique atmosphere.</p>
       
       <div class="grid">
         <div class="grid-item item-1">

@@ -5,8 +5,8 @@
     <section class="hero menu-hero">
       <div class="container">
         <div class="hero-content">
-          <h1>{{ $t('menu.hero.title') }}</h1>
-          <p>{{ $t('menu.hero.subtitle') }}</p>
+          <h1>Our Menu</h1>
+          <p>Discover our culinary creations made with fresh, locally-sourced ingredients</p>
         </div>
       </div>
     </section>
@@ -14,8 +14,8 @@
     <!-- Lunch Menu Section -->
     <section class="section">
       <div class="container">
-        <h2 class="section-title">{{ $t('menu.lunchMenu.title') }}</h2>
-        <p class="section-description text-center">{{ $t('menu.lunchMenu.description') }}</p>
+        <h2 class="section-title">Lunch Specials</h2>
+        <p class="section-description text-center">Available Monday to Friday from 11:30 to 14:30</p>
         
         <!-- Hardcoded lunch menu preview -->
         <div class="lunch-menu">
@@ -26,48 +26,48 @@
           
           <div class="lunch-menu-days full-page">
             <div class="lunch-menu-day">
-              <h4 class="day-title">{{ $t('days.monday') }}</h4>
+              <h4 class="day-title">Monday</h4>
               <div class="day-items">
                 <div class="lunch-menu-item">
                   <div class="item-header">
-                    <h5 class="item-name">{{ $i18n.locale === 'en' ? 'Mushroom Risotto' : 'Pilzrisotto' }}</h5>
+                    <h5 class="item-name">Mushroom Risotto</h5>
                     <span class="item-price">€9.90</span>
                   </div>
                   <p class="item-description">
-                    {{ $i18n.locale === 'en' ? 'Creamy arborio rice with seasonal mushrooms' : 'Cremiger Arborio-Reis mit Saisonpilzen' }}
+                    Creamy arborio rice with seasonal mushrooms
                   </p>
                 </div>
                 <div class="lunch-menu-item">
                   <div class="item-header">
-                    <h5 class="item-name">{{ $i18n.locale === 'en' ? 'Tomato Soup' : 'Tomatensuppe' }}</h5>
+                    <h5 class="item-name">Tomato Soup</h5>
                     <span class="item-price">€6.90</span>
                   </div>
                   <p class="item-description">
-                    {{ $i18n.locale === 'en' ? 'Classic tomato soup with basil and croutons' : 'Klassische Tomatensuppe mit Basilikum und Croutons' }}
+                    Classic tomato soup with basil and croutons
                   </p>
                 </div>
               </div>
             </div>
             
             <div class="lunch-menu-day">
-              <h4 class="day-title">{{ $t('days.tuesday') }}</h4>
+              <h4 class="day-title">Tuesday</h4>
               <div class="day-items">
                 <div class="lunch-menu-item">
                   <div class="item-header">
-                    <h5 class="item-name">{{ $i18n.locale === 'en' ? 'Chicken Curry' : 'Hähnchen-Curry' }}</h5>
+                    <h5 class="item-name">Chicken Curry</h5>
                     <span class="item-price">€10.90</span>
                   </div>
                   <p class="item-description">
-                    {{ $i18n.locale === 'en' ? 'Tender chicken pieces in a mild curry sauce with rice' : 'Zarte Hähnchenstücke in milder Currysauce mit Reis' }}
+                    Tender chicken pieces in a mild curry sauce with rice
                   </p>
                 </div>
                 <div class="lunch-menu-item">
                   <div class="item-header">
-                    <h5 class="item-name">{{ $i18n.locale === 'en' ? 'Vegetable Quiche' : 'Gemüsequiche' }}</h5>
+                    <h5 class="item-name">Vegetable Quiche</h5>
                     <span class="item-price">€8.90</span>
                   </div>
                   <p class="item-description">
-                    {{ $i18n.locale === 'en' ? 'Homemade quiche with seasonal vegetables and a side salad' : 'Hausgemachte Quiche mit Saisongemüse und Beilagensalat' }}
+                    Homemade quiche with seasonal vegetables and a side salad
                   </p>
                 </div>
               </div>
@@ -82,13 +82,13 @@
     <!-- Menu Categories Section -->
     <section class="section">
       <div class="container">
-        <h2 class="section-title">{{ $t('menu.regularMenu.title') }}</h2>
-        <p class="section-description text-center">{{ $t('menu.regularMenu.description') }}</p>
+        <h2 class="section-title">À La Carte Menu</h2>
+        <p class="section-description text-center">Our regular menu is available daily from 17:00 to 22:00</p>
         
         <!-- Menu filters -->
         <div class="menu-filters">
           <div class="tag-filters">
-            <span>{{ $t('menu.filters.dietary') }}:</span>
+            <span>Dietary Preferences:</span>
             <button 
               v-for="tag in tags" 
               :key="tag.id" 
@@ -110,10 +110,10 @@
               :key="item.id" 
               class="menu-item">
               <div class="menu-item-header">
-                <h4 class="menu-item-name">{{ item.name[$i18n.locale] }}</h4>
+                <h4 class="menu-item-name">{{ item.name }}</h4>
                 <span class="menu-item-price">€{{ item.price.toFixed(2) }}</span>
               </div>
-              <p class="menu-item-description">{{ item.description[$i18n.locale] }}</p>
+              <p class="menu-item-description">{{ item.description }}</p>
               <div class="menu-item-tags">
                 <span v-for="tagId in item.tags" :key="tagId" class="menu-item-tag">
                   {{ getTagName(tagId) }}
@@ -131,7 +131,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 
-// Type definitions for i18n content
+// Type definitions without i18n content
 const categories = ref([
   { id: 'pizza', name: 'Pizza', description: 'Our stone-baked pizzas', order: 1 },
   { id: 'pasta', name: 'Pasta', description: 'Homemade pasta dishes', order: 2 },
@@ -149,11 +149,8 @@ const tags = ref([
 const menuItems = ref([
   {
     id: 'margherita',
-    name: { en: 'Margherita Pizza', de: 'Pizza Margherita' },
-    description: { 
-      en: 'Classic pizza with tomato sauce, mozzarella, and fresh basil',
-      de: 'Klassische Pizza mit Tomatensauce, Mozzarella und frischem Basilikum' 
-    },
+    name: 'Margherita Pizza',
+    description: 'Classic pizza with tomato sauce, mozzarella, and fresh basil',
     price: 10.90,
     category: 'pizza',
     tags: ['vegetarian'],
@@ -161,11 +158,8 @@ const menuItems = ref([
   },
   {
     id: 'diavola',
-    name: { en: 'Diavola Pizza', de: 'Pizza Diavola' },
-    description: { 
-      en: 'Spicy pizza with tomato sauce, mozzarella, and spicy salami',
-      de: 'Scharfe Pizza mit Tomatensauce, Mozzarella und scharfer Salami' 
-    },
+    name: 'Diavola Pizza',
+    description: 'Spicy pizza with tomato sauce, mozzarella, and spicy salami',
     price: 12.90,
     category: 'pizza',
     tags: ['spicy'],
@@ -173,11 +167,8 @@ const menuItems = ref([
   },
   {
     id: 'vegetariana',
-    name: { en: 'Vegetariana Pizza', de: 'Pizza Vegetariana' },
-    description: { 
-      en: 'Veggie pizza with tomato sauce, mozzarella, and seasonal vegetables',
-      de: 'Gemüsepizza mit Tomatensauce, Mozzarella und saisonalem Gemüse' 
-    },
+    name: 'Vegetariana Pizza',
+    description: 'Veggie pizza with tomato sauce, mozzarella, and seasonal vegetables',
     price: 11.90,
     category: 'pizza',
     tags: ['vegetarian', 'vegan'],
@@ -185,11 +176,8 @@ const menuItems = ref([
   },
   {
     id: 'carbonara',
-    name: { en: 'Spaghetti Carbonara', de: 'Spaghetti Carbonara' },
-    description: { 
-      en: 'Spaghetti with creamy egg sauce, pancetta, and pecorino cheese',
-      de: 'Spaghetti mit cremiger Eiersauce, Pancetta und Pecorino-Käse' 
-    },
+    name: 'Spaghetti Carbonara',
+    description: 'Spaghetti with creamy egg sauce, pancetta, and pecorino cheese',
     price: 13.90,
     category: 'pasta',
     tags: [],
@@ -197,11 +185,8 @@ const menuItems = ref([
   },
   {
     id: 'bolognese',
-    name: { en: 'Tagliatelle Bolognese', de: 'Tagliatelle Bolognese' },
-    description: { 
-      en: 'Tagliatelle with rich meat ragù and parmesan',
-      de: 'Tagliatelle mit reichhaltigem Fleischragout und Parmesan' 
-    },
+    name: 'Tagliatelle Bolognese',
+    description: 'Tagliatelle with rich meat ragù and parmesan',
     price: 14.90,
     category: 'pasta',
     tags: [],
@@ -209,11 +194,8 @@ const menuItems = ref([
   },
   {
     id: 'arrabbiata',
-    name: { en: 'Penne Arrabbiata', de: 'Penne Arrabbiata' },
-    description: { 
-      en: 'Penne with spicy tomato sauce and garlic',
-      de: 'Penne mit scharfer Tomatensauce und Knoblauch' 
-    },
+    name: 'Penne Arrabbiata',
+    description: 'Penne with spicy tomato sauce and garlic',
     price: 12.90,
     category: 'pasta',
     tags: ['vegetarian', 'vegan', 'spicy'],
@@ -221,11 +203,8 @@ const menuItems = ref([
   },
   {
     id: 'caesar',
-    name: { en: 'Caesar Salad', de: 'Caesar Salad' },
-    description: { 
-      en: 'Romaine lettuce with Caesar dressing, croutons, and parmesan',
-      de: 'Römersalat mit Caesar-Dressing, Croutons und Parmesan' 
-    },
+    name: 'Caesar Salad',
+    description: 'Romaine lettuce with Caesar dressing, croutons, and parmesan',
     price: 9.90,
     category: 'salads',
     tags: ['vegetarian'],
@@ -233,11 +212,8 @@ const menuItems = ref([
   },
   {
     id: 'greek',
-    name: { en: 'Greek Salad', de: 'Griechischer Salat' },
-    description: { 
-      en: 'Fresh salad with tomatoes, cucumber, feta cheese, and olives',
-      de: 'Frischer Salat mit Tomaten, Gurken, Feta-Käse und Oliven' 
-    },
+    name: 'Greek Salad',
+    description: 'Fresh salad with tomatoes, cucumber, feta cheese, and olives',
     price: 8.90,
     category: 'salads',
     tags: ['vegetarian', 'gluten-free'],
@@ -245,11 +221,8 @@ const menuItems = ref([
   },
   {
     id: 'tiramisu',
-    name: { en: 'Tiramisu', de: 'Tiramisu' },
-    description: { 
-      en: 'Classic Italian dessert with coffee-soaked ladyfingers and mascarpone cream',
-      de: 'Klassisches italienisches Dessert mit in Kaffee getränkten Löffelbiskuits und Mascarpone-Creme' 
-    },
+    name: 'Tiramisu',
+    description: 'Classic Italian dessert with coffee-soaked ladyfingers and mascarpone cream',
     price: 6.90,
     category: 'desserts',
     tags: ['vegetarian'],
@@ -257,11 +230,8 @@ const menuItems = ref([
   },
   {
     id: 'pannacotta',
-    name: { en: 'Panna Cotta', de: 'Panna Cotta' },
-    description: { 
-      en: 'Creamy vanilla dessert with berry sauce',
-      de: 'Cremiges Vanilledessert mit Beerensauce' 
-    },
+    name: 'Panna Cotta',
+    description: 'Creamy vanilla dessert with berry sauce',
     price: 5.90,
     category: 'desserts',
     tags: ['vegetarian', 'gluten-free'],

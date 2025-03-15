@@ -2,10 +2,10 @@
   <section class="hero">
     <div class="container">
       <div class="hero-content">
-        <h1>{{ $t('home.hero.title') }}</h1>
-        <p>{{ $t('home.hero.subtitle') }}</p>
-        <NuxtLink :to="localePath('/menu')" class="btn btn-primary">
-          {{ $t('home.hero.menuButton') }}
+        <h1>Welcome to GastroSite</h1>
+        <p>Experience authentic cuisine in a cozy atmosphere</p>
+        <NuxtLink to="/menu" class="btn btn-primary">
+          View Our Menu
         </NuxtLink>
       </div>
     </div>
@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-const localePath = useLocalePath();
+// No script needed
 </script>
 
 <style scoped>

@@ -1,23 +1,23 @@
 <template>
   <section class="section contact-section">
     <div class="container">
-      <h2 class="section-title">{{ $t('home.contact.title') }}</h2>
+      <h2 class="section-title">Contact Us</h2>
       <div class="grid grid-2">
         <div class="contact-info">
-          <h3>{{ $t('home.contact.findUs') }}</h3>
+          <h3>Find Us</h3>
           <address>
             <p>Musterstraße 123<br>12345 Musterstadt</p>
             <p>Tel: +49 123 456789</p>
             <p>Email: info@gastrosite.com</p>
           </address>
           <div class="hours">
-            <h3>{{ $t('home.contact.openingHours') }}</h3>
-            <p>{{ $t('home.contact.monFri') }}: 11:00 - 22:00</p>
-            <p>{{ $t('home.contact.satSun') }}: 12:00 - 23:00</p>
+            <h3>Opening Hours</h3>
+            <p>Monday - Friday: 11:00 - 22:00</p>
+            <p>Saturday - Sunday: 12:00 - 23:00</p>
           </div>
         </div>
         <div class="map-container">
-          <h3>{{ $t('home.contact.location') }}</h3>
+          <h3>Location</h3>
           <div class="google-map">
             <!-- Google Maps iframe would go here -->
             <div class="map-placeholder">Google Maps Embed</div>

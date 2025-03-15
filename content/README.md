@@ -25,8 +25,8 @@ To fix the CMS integration issues:
 ## Content Structure
 
 - `/team/` - Contains team member profiles
-- `/menu/categories/` - Menu categories in different languages
-- `/menu/tags/` - Menu item tags in different languages
+- `/menu/categories/` - Menu categories
+- `/menu/tags/` - Menu item tags
 - `/menu/items/` - Individual menu items
 - `/lunch-menus/` - Weekly lunch menus
 
@@ -37,9 +37,7 @@ Content files are written in Markdown or YAML, with YAML frontmatter for metadat
 ```md
 ---
 name: John Smith
-position:
-  en: Chef
-  de: Koch
+position: Chef
 ---
 
 This is the content body (only for markdown files).

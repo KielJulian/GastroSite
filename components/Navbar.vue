@@ -3,16 +3,13 @@
     <div class="container">
       <nav class="nav">
         <div class="nav-logo">
-          <NuxtLink :to="localePath('/')">
+          <NuxtLink to="/">
             <h1>GastroSite</h1>
           </NuxtLink>
         </div>
         <ul class="nav-links hide-desktop">
           <li>
-            <NuxtLink :to="localePath('/menu')">{{ $t('navigation.menu') }}</NuxtLink>
-          </li>
-          <li>
-            <LanguageSwitcher />
+            <NuxtLink to="/menu">Menu</NuxtLink>
           </li>
         </ul>
         <div class="nav-mobile hide-mobile">
@@ -27,7 +24,6 @@
 
 <script setup lang="ts">
 const isMobileMenuOpen = ref(false);
-const localePath = useLocalePath();
 
 function toggleMobileMenu() {
   isMobileMenuOpen.value = !isMobileMenuOpen.value;
