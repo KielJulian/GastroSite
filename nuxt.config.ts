@@ -14,12 +14,10 @@ export default defineNuxtConfig({
     '@nuxthq/studio'
   ],
 
-  // Vercel-specific Nitro config
   nitro: {
-    preset: 'vercel',
     prerender: {
-      failOnError: false, // Don't fail on prerender errors
-      ignore: ['/api/**'] // Skip API routes during prerendering
+      failOnError: false,
+      ignore: ['/api/**']
     }
   },
   
