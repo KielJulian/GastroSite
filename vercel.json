@@ -1,5 +1,4 @@
 {
-  "framework": "nuxt",
   "buildCommand": "npm run vercel-build",
   "outputDirectory": ".output/public",
   "installCommand": "npm install",
