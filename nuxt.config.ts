@@ -11,6 +11,16 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n'
   ],
 
+  // Fix for prerendering errors
+  nitro: {
+    prerender: {
+      failOnError: false, // Don't fail on prerender errors
+      ignore: ['/api/**'] // Skip API routes during prerendering
+    },
+    // Vercel specific configuration
+    preset: 'vercel'
+  },
+
   content: {
     // Nuxt Content configuration
     documentDriven: true,

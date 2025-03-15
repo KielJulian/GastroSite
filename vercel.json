@@ -1,0 +1,15 @@
+{
+  "buildCommand": "NITRO_PRESET=vercel npm run build",
+  "framework": "nuxt",
+  "devCommand": "nuxt dev",
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/"
+    }
+  ]
+}
