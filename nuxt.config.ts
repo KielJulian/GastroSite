@@ -9,8 +9,7 @@ export default defineNuxtConfig({
   },
 
   modules: [
-    '@nuxt/content',
-    '@nuxthq/studio'
+    '@nuxt/content'
   ],
 
   nitro: {
@@ -20,9 +19,6 @@ export default defineNuxtConfig({
     }
   },
   
-  studio: {
-    enabled: true
-  },
 
   content: {},
 

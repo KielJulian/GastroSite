@@ -1,5 +1,5 @@
-// This file is handled by the @nuxthq/studio module
-// It will be overridden by the module, so we keep it simple
+// This file used to be managed by @nuxthq/studio module
+// Now it just returns empty content since we're using queryContent
 export default defineEventHandler(() => {
-  return { handled: 'by Nuxt Studio module' }
+  return { handled: 'by content module directly' }
 })
