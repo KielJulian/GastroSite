@@ -21,8 +21,7 @@ export default defineNuxtConfig({
   },
   
   studio: {
-    enabled: true,
-    title: 'GastroSite Studio'
+    enabled: true
   },
 
   content: {
