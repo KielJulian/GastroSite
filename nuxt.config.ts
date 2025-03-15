@@ -8,7 +8,8 @@ export default defineNuxtConfig({
 
   modules: [
     '@nuxt/content',
-    '@nuxtjs/i18n'
+    '@nuxtjs/i18n',
+    '@nuxthq/studio'
   ],
 
   // Fix for prerendering errors
@@ -17,6 +18,11 @@ export default defineNuxtConfig({
       failOnError: false, // Don't fail on prerender errors
       ignore: ['/api/**'] // Skip API routes during prerendering
     }
+  },
+  
+  studio: {
+    enabled: true,
+    title: 'GastroSite Studio'
   },
 
   content: {
