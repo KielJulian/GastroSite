@@ -1,4 +1,3 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
@@ -17,7 +16,34 @@ export default defineNuxtConfig({
     preset: 'vercel'
   },
 
-  content: {},
+  content: {
+    documentDriven: true,
+    watch: {
+      enabled: true
+    },
+    // Use the newer syntax for enabling preview features
+    experimental: {
+      clientDB: true,
+      previewMode: true
+    },
+    api: {
+      baseURL: '/api/_content'
+    },
+    markdown: {
+      anchorLinks: true,
+      toc: {
+        depth: 3,
+        searchDepth: 3
+      }
+    }
+  },
+
+  // Add route rules for content API
+  routeRules: {
+    '/api/_content/**': { 
+      cache: { maxAge: 0 }
+    }
+  },
 
   app: {
     baseURL: '/',
@@ -38,7 +64,6 @@ export default defineNuxtConfig({
     '@/assets/css/main.css'
   ],
 
-  // Explicitly set the runtime config for the server
   runtimeConfig: {
     // Public keys that are exposed to the client
     public: {
