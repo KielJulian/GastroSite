@@ -1,0 +1,17 @@
+{
+  "ignores": [".DS_Store"],
+  "navigation": {
+    "fields": ["title", "description"]
+  },
+  "collections": {
+    "menu": {
+      "path": "/menu"
+    },
+    "lunch-menus": {
+      "path": "/lunch-menus"
+    },
+    "team": {
+      "path": "/team"
+    }
+  }
+} 

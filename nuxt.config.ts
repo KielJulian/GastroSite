@@ -14,27 +14,11 @@ export default defineNuxtConfig({
   ],
 
   nitro: {
-    preset: 'vercel',
-    // Important for content API to work correctly
-    routeRules: {
-      '/api/_content/**': { 
-        cache: false,
-        headers: {
-          'cache-control': 'no-cache, no-store'
-        }
-      }
-    }
+    preset: 'vercel'
   },
 
-  // Simple content configuration to avoid TS errors
+  // Keep content configuration minimal
   content: {},
-
-  // These routes will not be cached on Vercel
-  routeRules: {
-    '/api/**': { 
-      cache: false
-    }
-  },
 
   app: {
     baseURL: '/',
@@ -59,11 +43,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // Public keys that are exposed to the client
     public: {
-      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:3000',
-      studioUrl: 'https://nuxt.studio',
-      studioApiUrl: 'https://api.nuxt.studio'
+      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:3000'
     }
-  },
-
-  compatibilityDate: '2025-03-16'
+  }
 })
