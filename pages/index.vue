@@ -37,24 +37,32 @@ import { useRestaurantContent } from '~/composables/useRestaurantContent';
 
 // Fetch the latest lunch menu
 const { getLatestLunchMenu } = useRestaurantContent();
-// Use a static key for better caching
-const lunchMenuKey = 'homepage-lunch-menu';
+// Use a unique key to prevent caching
+const timestamp = Date.now();
+const lunchMenuKey = `homepage-lunch-menu-${timestamp}`;
 
 const { data: lunchMenu, pending: lunchMenuPending, error: lunchMenuError, refresh: refreshLunchMenu } = useAsyncData(
   lunchMenuKey, 
   () => getLatestLunchMenu(),
   { 
     server: true,
-    immediate: true
+    immediate: true,
+    // Disable caching
+    getCachedData: () => null
   }
 );
 
 // Set up a refresh interval to check for content updates
 onMounted(() => {
-  // Refresh the data every 30 seconds to check for content updates
+  // Do an initial refresh immediately to ensure data is fresh
+  setTimeout(() => {
+    refreshLunchMenu();
+  }, 100);
+  
+  // Refresh the data every 15 seconds to check for content updates
   const refreshInterval = setInterval(() => {
     refreshLunchMenu();
-  }, 30000);
+  }, 15000);
 
   onUnmounted(() => {
     clearInterval(refreshInterval);

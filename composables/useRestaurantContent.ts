@@ -177,8 +177,9 @@ export const useRestaurantContent = () => {
     try {
       const lunchMenus = await fetchLunchMenus();
       
-      if (!lunchMenus || lunchMenus.length === 0) {
-        console.error('No lunch menus found');
+      // Check if we received a valid array response
+      if (!lunchMenus || !Array.isArray(lunchMenus) || lunchMenus.length === 0) {
+        console.error('No lunch menus found or invalid response format', lunchMenus);
         return null;
       }
       
@@ -187,6 +188,8 @@ export const useRestaurantContent = () => {
       
       // First try to find a menu that includes the current date
       for (const menu of lunchMenus) {
+        if (!menu.startDate || !menu.endDate) continue;
+        
         const startDate = new Date(menu.startDate);
         const endDate = new Date(menu.endDate);
         
@@ -197,11 +200,13 @@ export const useRestaurantContent = () => {
       
       // If no current menu, return the most recent one
       // Sort by start date (descending)
-      lunchMenus.sort((a, b) => {
-        return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+      const sortedMenus = [...lunchMenus].sort((a, b) => {
+        const dateA = a.startDate ? new Date(a.startDate).getTime() : 0;
+        const dateB = b.startDate ? new Date(b.startDate).getTime() : 0;
+        return dateB - dateA;
       });
       
-      return lunchMenus[0];
+      return sortedMenus[0];
     } catch (error) {
       console.error('Error getting latest lunch menu:', error);
       return null;
@@ -257,8 +262,14 @@ export const useRestaurantContent = () => {
   const createApiUrl = (path: string): string => {
     // Check if we're running on client or server
     if (typeof window !== 'undefined') {
-      // Client-side - use relative URL
-      return path;
+      // Client-side - use relative URL for local development
+      // or absolute URL for production site
+      if (window.location.hostname === 'localhost') {
+        return path;
+      } else {
+        // In production, use the full URL
+        return `${window.location.origin}${path}`;
+      }
     } else {
       // Server-side - use absolute URL with origin from runtime config
       try {
@@ -471,7 +482,13 @@ export const useRestaurantContent = () => {
       const apiUrl = createApiUrl('/api/content/team');
       console.log('Fetching team members from:', apiUrl);
       
-      const result = await fetch(apiUrl)
+      const result = await fetch(apiUrl, {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        },
+        cache: 'no-store'
+      })
         .then(response => {
           if (!response.ok) {
             throw new Error(`API error: ${response.status} ${response.statusText}`);
@@ -485,8 +502,15 @@ export const useRestaurantContent = () => {
         
       console.log('Raw team members result:', result);
       
-      if (result && result.success === false) {
-        console.error('Error fetching team members:', result.error);
+      // Check if we got an error response
+      if (result && result.error) {
+        console.error('API returned error:', result.error);
+        // If the API returned teamMembers array along with error, use it
+        if (Array.isArray(result.teamMembers)) {
+          console.log('Using teamMembers from error response:', result.teamMembers.length);
+          return result.teamMembers;
+        }
+        // Otherwise return empty array
         return [];
       }
       
@@ -502,6 +526,7 @@ export const useRestaurantContent = () => {
         }));
       }
       
+      console.error('Unexpected result format:', typeof result, result);
       return [];
     } catch (err) {
       console.error('Error fetching team members content:', err);
@@ -511,13 +536,40 @@ export const useRestaurantContent = () => {
   
   const fetchLunchMenus = async (): Promise<LunchMenu[]> => {
     try {
-      const response = await fetch('/api/content/lunch-menus');
+      const apiUrl = createApiUrl('/api/content/lunch-menus');
+      console.log('Fetching lunch menus from:', apiUrl);
+      
+      const response = await fetch(apiUrl, {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        },
+        cache: 'no-store'
+      });
       
       if (!response.ok) {
         throw new Error(`Failed to fetch lunch menus: ${response.status} ${response.statusText}`);
       }
       
       const data = await response.json();
+      
+      // Check if we got an error response
+      if (data && data.error) {
+        console.error('API returned error:', data.error);
+        // If the API returned lunchMenus array along with error, use it
+        if (Array.isArray(data.lunchMenus)) {
+          return data.lunchMenus;
+        }
+        // Otherwise return empty array
+        return [];
+      }
+      
+      // Check if we got a proper array
+      if (!Array.isArray(data)) {
+        console.error('Expected array but got:', typeof data, data);
+        return [];
+      }
+      
       return data;
     } catch (error) {
       console.error('Error fetching lunch menus:', error);

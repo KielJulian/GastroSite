@@ -9,7 +9,7 @@
     <div v-else-if="teamMembers && teamMembers.length > 0" class="grid grid-3">
       <div 
         v-for="member in limitedTeamMembers" 
-        :key="member._path" 
+        :key="member.id" 
         class="team-member card">
         <div class="team-member-image">
           <img v-if="member.image" :src="member.image" :alt="member.name">
@@ -48,10 +48,11 @@ const props = defineProps({
 
 // Fetch team members from CMS
 const { getTeamMembers } = useRestaurantContent();
-// Use a static key for better caching
-const uniqueKey = "team-members";
+
+// Use a unique key for each request to avoid caching
+const timestamp = Date.now();
 const { data: teamMembers, pending, error, refresh } = useAsyncData(
-  uniqueKey, 
+  `team-members-${timestamp}`, 
   () => getTeamMembers(props.limit),
   { 
     server: true,
@@ -62,10 +63,15 @@ const { data: teamMembers, pending, error, refresh } = useAsyncData(
 
 // Set up a refresh interval to check for content updates
 onMounted(() => {
-  // Refresh the data every 30 seconds to check for content updates
+  // Do an initial refresh immediately to ensure data is fresh
+  setTimeout(() => {
+    refresh();
+  }, 100);
+  
+  // Refresh the data every 15 seconds to check for content updates
   const refreshInterval = setInterval(() => {
     refresh();
-  }, 30000);
+  }, 15000);
 
   onUnmounted(() => {
     clearInterval(refreshInterval);
@@ -76,7 +82,11 @@ onMounted(() => {
 const limitedTeamMembers = computed(() => {
   if (!teamMembers.value) return [];
   
-  const sorted = [...teamMembers.value].sort((a, b) => a.order - b.order);
+  const sorted = [...teamMembers.value].sort((a, b) => {
+    const orderA = a.order || 999;
+    const orderB = b.order || 999;
+    return orderA - orderB;
+  });
   
   if (props.limit > 0) {
     return sorted.slice(0, props.limit);
