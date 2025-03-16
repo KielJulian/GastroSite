@@ -6,35 +6,11 @@
       "use": "@nuxtjs/vercel-builder"
     }
   ],
-  "routes": [
-    {
-      "src": "/_nuxt/content/([^/]+)/(.*)",
-      "dest": "/api/_content/$1/$2",
-      "headers": {
-        "Cache-Control": "no-cache, no-store, must-revalidate"
-      }
-    },
-    {
-      "src": "/_nuxt/content/(.*)",
-      "dest": "/api/_content/$1",
-      "headers": {
-        "Cache-Control": "no-cache, no-store, must-revalidate"
-      }
-    },
-    {
-      "src": "/api/_content/(.*)",
-      "dest": "/api/_content/$1",
-      "headers": {
-        "Cache-Control": "no-cache, no-store, must-revalidate"
-      }
-    },
-    {
-      "src": "/content-api/(.*)",
-      "dest": "/api/_content/$1",
-      "headers": {
-        "Cache-Control": "no-cache, no-store, must-revalidate"
-      }
-    }
+  "rewrites": [
+    { "source": "/_nuxt/content/([^/]+)/(.*)", "destination": "/api/_content/$1/$2" },
+    { "source": "/_nuxt/content/(.*)", "destination": "/api/_content/$1" },
+    { "source": "/api/_content/(.*)", "destination": "/api/_content/$1" },
+    { "source": "/content-api/(.*)", "destination": "/api/_content/$1" }
   ],
   "headers": [
     {

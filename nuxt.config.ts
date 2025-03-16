@@ -17,8 +17,14 @@ export default defineNuxtConfig({
     preset: 'vercel'
   },
 
-  // Keep content configuration minimal
-  content: {},
+  // Explicit content configuration to avoid errors
+  content: {
+    // documentDriven would normally cause an error, but moving to collection config
+    // watch and live update content
+    watch: {
+      enabled: true
+    }
+  },
 
   app: {
     baseURL: '/',
