@@ -74,13 +74,8 @@ export const useRestaurantContent = () => {
       }
       
       if (!data.value) {
-        console.warn('No categories found, returning fallback categories');
-        return [
-          { id: "pizza", name: "Pizza", description: "Our stone-baked pizzas", order: 1 },
-          { id: "pasta", name: "Pasta", description: "Homemade pasta dishes", order: 2 },
-          { id: "salads", name: "Salads", description: "Fresh seasonal salads", order: 3 },
-          { id: "desserts", name: "Desserts", description: "Sweet treats", order: 4 }
-        ];
+        console.warn('No categories found, returning empty array');
+        return [];
       }
       
       const result = data.value;
@@ -88,13 +83,8 @@ export const useRestaurantContent = () => {
       return result;
     } catch (err) {
       console.error('Unexpected error in getMenuCategories:', err);
-      // Return hardcoded categories as fallback
-      return [
-        { id: "pizza", name: "Pizza", description: "Our stone-baked pizzas", order: 1 },
-        { id: "pasta", name: "Pasta", description: "Homemade pasta dishes", order: 2 },
-        { id: "salads", name: "Salads", description: "Fresh seasonal salads", order: 3 },
-        { id: "desserts", name: "Desserts", description: "Sweet treats", order: 4 }
-      ];
+      // Return empty array instead of hardcoded values
+      return [];
     }
   };
   
@@ -118,13 +108,8 @@ export const useRestaurantContent = () => {
       }
       
       if (!data.value) {
-        console.warn('No tags found, returning fallback tags');
-        return [
-          { id: "vegetarian", name: "Vegetarian", icon: "leaf" },
-          { id: "vegan", name: "Vegan", icon: "plant" },
-          { id: "spicy", name: "Spicy", icon: "fire" },
-          { id: "gluten-free", name: "Gluten-Free", icon: "wheat-slash" }
-        ];
+        console.warn('No tags found, returning empty array');
+        return [];
       }
       
       const result = data.value;
@@ -132,13 +117,8 @@ export const useRestaurantContent = () => {
       return result;
     } catch (err) {
       console.error('Unexpected error in getMenuTags:', err);
-      // Return hardcoded tags as fallback
-      return [
-        { id: "vegetarian", name: "Vegetarian", icon: "leaf" },
-        { id: "vegan", name: "Vegan", icon: "plant" },
-        { id: "spicy", name: "Spicy", icon: "fire" },
-        { id: "gluten-free", name: "Gluten-Free", icon: "wheat-slash" }
-      ];
+      // Return empty array
+      return [];
     }
   };
   
@@ -162,45 +142,8 @@ export const useRestaurantContent = () => {
       }
       
       if (!data.value) {
-        console.warn('No menu items found, returning fallback items');
-        return [
-          {
-            name: "Margherita Pizza",
-            description: "Classic pizza with tomato sauce, mozzarella, and fresh basil",
-            price: 13.4,
-            category: "pizza",
-            tags: ["vegetarian"],
-            image: "/images/menu/margherita-pizza.jpg",
-            order: 1
-          },
-          {
-            name: "Carbonara Pasta",
-            description: "Creamy pasta with pancetta, egg, and parmesan cheese",
-            price: 15.9,
-            category: "pasta",
-            tags: [],
-            image: "/images/menu/carbonara-pasta.jpg",
-            order: 1
-          },
-          {
-            name: "Caesar Salad",
-            description: "Romaine lettuce with parmesan cheese, croutons, and our special Caesar dressing",
-            price: 10.5,
-            category: "salads",
-            tags: ["vegetarian"],
-            image: "/images/menu/caesar-salad.jpg",
-            order: 1
-          },
-          {
-            name: "Tiramisu",
-            description: "Traditional Italian dessert with coffee-soaked ladyfingers and mascarpone cream",
-            price: 7.8,
-            category: "desserts",
-            tags: ["vegetarian"],
-            image: "/images/menu/tiramisu.jpg",
-            order: 1
-          }
-        ];
+        console.warn('No menu items found, returning empty array');
+        return [];
       }
       
       // Get all items
@@ -365,23 +308,13 @@ export const useRestaurantContent = () => {
         }));
       }
       
-      // As a last resort, return hardcoded categories
-      console.warn('Falling back to hardcoded categories');
-      return [
-        { id: "pizza", name: "Pizza", description: "Our stone-baked pizzas", order: 1 },
-        { id: "pasta", name: "Pasta", description: "Homemade pasta dishes", order: 2 },
-        { id: "salads", name: "Salads", description: "Fresh seasonal salads", order: 3 },
-        { id: "desserts", name: "Desserts", description: "Sweet treats", order: 4 }
-      ];
+      // Return empty array instead of hardcoded content
+      console.warn('No valid categories data found, returning empty array');
+      return [];
     } catch (err) {
       console.error('Error fetching categories content:', err);
-      // Return hardcoded categories as fallback
-      return [
-        { id: "pizza", name: "Pizza", description: "Our stone-baked pizzas", order: 1 },
-        { id: "pasta", name: "Pasta", description: "Homemade pasta dishes", order: 2 },
-        { id: "salads", name: "Salads", description: "Fresh seasonal salads", order: 3 },
-        { id: "desserts", name: "Desserts", description: "Sweet treats", order: 4 }
-      ];
+      // Return empty array
+      return [];
     }
   };
   
@@ -419,23 +352,13 @@ export const useRestaurantContent = () => {
         }));
       }
       
-      // As a last resort, return hardcoded tags
-      console.warn('Falling back to hardcoded tags');
-      return [
-        { id: "vegetarian", name: "Vegetarian", icon: "leaf" },
-        { id: "vegan", name: "Vegan", icon: "plant" },
-        { id: "spicy", name: "Spicy", icon: "fire" },
-        { id: "gluten-free", name: "Gluten-Free", icon: "wheat-slash" }
-      ];
+      // Return empty array
+      console.warn('No valid tags data found, returning empty array');
+      return [];
     } catch (err) {
       console.error('Error fetching tags content:', err);
-      // Return hardcoded tags as fallback
-      return [
-        { id: "vegetarian", name: "Vegetarian", icon: "leaf" },
-        { id: "vegan", name: "Vegan", icon: "plant" },
-        { id: "spicy", name: "Spicy", icon: "fire" },
-        { id: "gluten-free", name: "Gluten-Free", icon: "wheat-slash" }
-      ];
+      // Return empty array
+      return [];
     }
   };
   
@@ -467,79 +390,25 @@ export const useRestaurantContent = () => {
       
       if (Array.isArray(result)) {
         return result.map((item: any) => ({
+          _path: item._path || undefined,
+          id: item._id || item.id || undefined,
           name: String(item.name || ''),
           description: String(item.description || ''),
           price: Number(item.price || 0),
           category: String(item.category || ''),
-          tags: Array.isArray(item.tags) ? item.tags : (item.tags ? [item.tags] : []),
-          image: String(item.image || ''),
+          tags: Array.isArray(item.tags) ? item.tags.map(String) : [],
+          image: item.image || undefined,
           order: Number(item.order || 0)
         }));
       }
       
-      // As a last resort, return hardcoded menu items
-      console.warn('Falling back to hardcoded menu items');
-      return [
-        {
-          name: "Margherita Pizza",
-          description: "Classic pizza with tomato sauce, mozzarella, and fresh basil",
-          price: 13.4,
-          category: "pizza",
-          tags: ["vegetarian"],
-          image: "/images/menu/margherita-pizza.jpg",
-          order: 1
-        },
-        {
-          name: "Carbonara Pasta",
-          description: "Creamy pasta with pancetta, egg, and parmesan cheese",
-          price: 15.9,
-          category: "pasta",
-          tags: [],
-          image: "/images/menu/carbonara-pasta.jpg",
-          order: 1
-        },
-        {
-          name: "Caesar Salad",
-          description: "Romaine lettuce with parmesan cheese, croutons, and our special Caesar dressing",
-          price: 10.5,
-          category: "salads",
-          tags: ["vegetarian"],
-          image: "/images/menu/caesar-salad.jpg",
-          order: 1
-        },
-        {
-          name: "Tiramisu",
-          description: "Traditional Italian dessert with coffee-soaked ladyfingers and mascarpone cream",
-          price: 7.8,
-          category: "desserts",
-          tags: ["vegetarian"],
-          image: "/images/menu/tiramisu.jpg",
-          order: 1
-        }
-      ];
+      // Return empty array instead of hardcoded content
+      console.warn('No valid menu items data found, returning empty array');
+      return [];
     } catch (err) {
       console.error('Error fetching menu items content:', err);
-      // Return hardcoded menu items as fallback
-      return [
-        {
-          name: "Margherita Pizza",
-          description: "Classic pizza with tomato sauce, mozzarella, and fresh basil",
-          price: 13.4,
-          category: "pizza",
-          tags: ["vegetarian"],
-          image: "/images/menu/margherita-pizza.jpg",
-          order: 1
-        },
-        {
-          name: "Carbonara Pasta",
-          description: "Creamy pasta with pancetta, egg, and parmesan cheese",
-          price: 15.9,
-          category: "pasta",
-          tags: [],
-          image: "/images/menu/carbonara-pasta.jpg",
-          order: 1
-        }
-      ];
+      // Return empty array
+      return [];
     }
   };
   
