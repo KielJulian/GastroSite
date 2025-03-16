@@ -14,16 +14,25 @@ export default defineNuxtConfig({
   ],
 
   nitro: {
-    preset: 'vercel'
+    preset: 'vercel',
+    // Important for content API to work correctly
+    routeRules: {
+      '/api/_content/**': { 
+        cache: false,
+        headers: {
+          'cache-control': 'no-cache, no-store'
+        }
+      }
+    }
   },
 
-  // Simplified content configuration
+  // Simple content configuration to avoid TS errors
   content: {},
 
-  // Add route rules for content API
+  // These routes will not be cached on Vercel
   routeRules: {
-    '/api/_content/**': { 
-      cache: { maxAge: 0 }
+    '/api/**': { 
+      cache: false
     }
   },
 
