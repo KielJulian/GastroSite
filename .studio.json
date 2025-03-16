@@ -1,11 +1,1 @@
-{
-  "version": 1,
-  "contentDirectories": ["content"],
-  "contentIgnores": [".DS_Store", ".git", "node_modules"],
-  "contentLayerConfig": {},
-  "modules": [
-    "@nuxthq/studio",
-    "@nuxt/content"
-  ],
-  "defaultBranch": "main"
-}
+{"version":1,"contentDirectories":["content"],"contentIgnores":[".DS_Store",".git","node_modules"],"modules":["@nuxthq/studio","@nuxt/content"],"defaultBranch":"main"}

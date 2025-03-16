@@ -1,0 +1,34 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "nuxt.config.ts",
+      "use": "@nuxtjs/vercel-builder"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/_nuxt/content/cache.json",
+      "dest": "/api/_content/cache"
+    },
+    {
+      "src": "/_nuxt/content/query/(.*)",
+      "dest": "/api/_content/query/$1"
+    },
+    {
+      "src": "/_nuxt/content/(.*)",
+      "dest": "/api/_content/$1"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/_content/cache",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ]
+} 

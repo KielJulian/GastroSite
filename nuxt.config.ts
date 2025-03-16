@@ -9,26 +9,15 @@ export default defineNuxtConfig({
   },
 
   modules: [
-    '@nuxt/content'
+    '@nuxt/content',
+    '@nuxthq/studio'
   ],
 
   nitro: {
     preset: 'vercel'
   },
 
-  content: {
-    documentDriven: true,
-    watch: {
-      enabled: true
-    },
-    markdown: {
-      anchorLinks: true,
-      toc: {
-        depth: 3,
-        searchDepth: 3
-      }
-    }
-  },
+  content: {},
 
   app: {
     baseURL: '/',

@@ -1,5 +1,1 @@
-export default defineAppConfig({
-  studio: {
-    enabled: true
-  }
-})
+export default {studio:{}}

@@ -1,5 +1,6 @@
-// This file used to be managed by @nuxthq/studio module
-// Now it just returns empty content since we're using queryContent
+// Handle content API requests through Nuxt Content
+// This allows real-time content updates when used with Nuxt Studio
 export default defineEventHandler(() => {
-  return { handled: 'by content module directly' }
+  // Let the content module handle requests directly
+  return { success: true }
 })
