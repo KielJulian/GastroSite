@@ -285,9 +285,42 @@ export const useRestaurantContent = () => {
   
   const fetchContentCategories = async (): Promise<MenuCategory[]> => {
     try {
-      // Try our custom endpoint first with proper URL resolution
+      console.log('Fetching categories using Nuxt Content');
+      
+      try {
+        // Try using Nuxt Content directly first
+        const { data: categories } = await useAsyncData('menu-categories-content', () => 
+          $fetch('/api/_content/query', {
+            method: 'POST',
+            body: {
+              where: {
+                _path: { $contains: 'menu/categories' },
+                _extension: 'yaml'
+              }
+            }
+          })
+        );
+        
+        console.log('Raw categories from Content:', categories.value);
+        
+        if (categories.value && Array.isArray(categories.value) && categories.value.length > 0) {
+          const categoryData = categories.value[0];
+          if (categoryData && categoryData.categories && Array.isArray(categoryData.categories)) {
+            return categoryData.categories.map((category: any) => ({
+              id: String(category.id || ''),
+              name: String(category.name || ''),
+              description: String(category.description || ''),
+              order: Number(category.order || 0)
+            }));
+          }
+        }
+      } catch (contentErr) {
+        console.error('Error using Nuxt Content API for categories:', contentErr);
+      }
+      
+      // Fallback to our custom API
       const apiUrl = createApiUrl('/api/content/menu/categories');
-      console.log('Fetching categories from:', apiUrl);
+      console.log('Falling back to API for categories:', apiUrl);
       
       const result = await fetch(apiUrl)
         .then(response => {
@@ -297,14 +330,12 @@ export const useRestaurantContent = () => {
           return response.json();
         })
         .catch(err => {
-          console.error('Custom API failed:', err);
-          // Return an empty array instead of trying another endpoint that might also fail
+          console.error('Error fetching categories from API:', err);
           return [];
         });
-
-      console.log('Raw categories result:', result);
+        
+      console.log('Raw categories from API:', result);
       
-      // Handle different response formats
       if (result && result.success === false) {
         console.error('Error fetching categories:', result.error);
         return [];
@@ -319,8 +350,8 @@ export const useRestaurantContent = () => {
         }));
       }
       
-      // Return empty array instead of hardcoded content
-      console.warn('No valid categories data found, returning empty array');
+      // Return empty array
+      console.warn('No categories found, returning empty array');
       return [];
     } catch (err) {
       console.error('Error fetching categories content:', err);
@@ -331,9 +362,41 @@ export const useRestaurantContent = () => {
   
   const fetchContentTags = async (): Promise<MenuTag[]> => {
     try {
-      // Try our custom endpoint with proper URL resolution
+      console.log('Fetching tags using Nuxt Content');
+      
+      try {
+        // Try using Nuxt Content directly first
+        const { data: tags } = await useAsyncData('menu-tags-content', () => 
+          $fetch('/api/_content/query', {
+            method: 'POST',
+            body: {
+              where: {
+                _path: { $contains: 'menu/tags' },
+                _extension: 'yaml'
+              }
+            }
+          })
+        );
+        
+        console.log('Raw tags from Content:', tags.value);
+        
+        if (tags.value && Array.isArray(tags.value) && tags.value.length > 0) {
+          const tagData = tags.value[0];
+          if (tagData && tagData.tags && Array.isArray(tagData.tags)) {
+            return tagData.tags.map((tag: any) => ({
+              id: String(tag.id || ''),
+              name: String(tag.name || ''),
+              icon: String(tag.icon || '')
+            }));
+          }
+        }
+      } catch (contentErr) {
+        console.error('Error using Nuxt Content API for tags:', contentErr);
+      }
+      
+      // Fallback to our custom API
       const apiUrl = createApiUrl('/api/content/menu/tags');
-      console.log('Fetching tags from:', apiUrl);
+      console.log('Falling back to API for tags:', apiUrl);
       
       const result = await fetch(apiUrl)
         .then(response => {
@@ -343,12 +406,11 @@ export const useRestaurantContent = () => {
           return response.json();
         })
         .catch(err => {
-          console.error('Custom API failed:', err);
-          // Return an empty array instead of trying another endpoint that might also fail
+          console.error('Error fetching tags from API:', err);
           return [];
         });
         
-      console.log('Raw tags result:', result);
+      console.log('Raw tags from API:', result);
       
       if (result && result.success === false) {
         console.error('Error fetching tags:', result.error);
@@ -364,7 +426,7 @@ export const useRestaurantContent = () => {
       }
       
       // Return empty array
-      console.warn('No valid tags data found, returning empty array');
+      console.warn('No tags found, returning empty array');
       return [];
     } catch (err) {
       console.error('Error fetching tags content:', err);
@@ -375,9 +437,44 @@ export const useRestaurantContent = () => {
   
   const fetchContentMenuItems = async (): Promise<MenuItem[]> => {
     try {
-      // Try our custom endpoint with proper URL resolution
+      console.log('Fetching menu items using Nuxt Content');
+      
+      try {
+        // Use Nuxt Content directly
+        const { data: items } = await useAsyncData('menu-items-content', () => 
+          $fetch('/api/_content/query', {
+            method: 'POST',
+            body: {
+              where: {
+                _path: { $contains: 'menu/items' },
+                _extension: 'md'
+              }
+            }
+          })
+        );
+        
+        console.log('Raw menu items from Content:', items.value);
+        
+        if (items.value && Array.isArray(items.value)) {
+          return items.value.map((item: any) => ({
+            _path: item._path || undefined,
+            id: item._id || item.id || undefined,
+            name: String(item.name || ''),
+            description: String(item.description || ''),
+            price: Number(item.price || 0),
+            category: String(item.category || ''),
+            tags: Array.isArray(item.tags) ? item.tags.map(String) : [],
+            image: item.image || undefined,
+            order: Number(item.order || 0)
+          }));
+        }
+      } catch (contentErr) {
+        console.error('Error using Nuxt Content API:', contentErr);
+      }
+      
+      // Fallback to our custom API
       const apiUrl = createApiUrl('/api/content/menu/items');
-      console.log('Fetching menu items from:', apiUrl);
+      console.log('Falling back to API:', apiUrl);
       
       const result = await fetch(apiUrl)
         .then(response => {
@@ -387,17 +484,11 @@ export const useRestaurantContent = () => {
           return response.json();
         })
         .catch(err => {
-          console.error('Custom API failed:', err);
-          // Return an empty array instead of trying another endpoint that might also fail
+          console.error('API fallback failed:', err);
           return [];
         });
         
-      console.log('Raw menu items result:', result);
-      
-      if (result && result.success === false) {
-        console.error('Error fetching menu items:', result.error);
-        return [];
-      }
+      console.log('API fallback result:', result);
       
       if (Array.isArray(result)) {
         return result.map((item: any) => ({
@@ -413,7 +504,7 @@ export const useRestaurantContent = () => {
         }));
       }
       
-      // Return empty array instead of hardcoded content
+      // Return empty array
       console.warn('No valid menu items data found, returning empty array');
       return [];
     } catch (err) {
