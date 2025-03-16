@@ -1,4 +1,5 @@
 import { useAsyncData } from '#imports';
+import { useContentHelper } from './useContentHelper';
 
 // Define interfaces
 interface TeamMember {
@@ -17,64 +18,44 @@ interface TeamMember {
 }
 
 export const useTeamMembers = () => {
-  // Create a valid URL for both server and client side
-  const createApiUrl = (path: string): string => {
-    // Check if we're running on client or server
-    if (typeof window !== 'undefined') {
-      // Client-side - use relative URL
-      return path;
-    } else {
-      // Server-side - use absolute URL with origin
-      try {
-        return `http://localhost:3000${path}`;
-      } catch (err) {
-        console.error('Error creating API URL:', err);
-        return path;
-      }
-    }
-  };
-
-  // Fetch team members from API
+  // Get the content helper
+  const contentHelper = useContentHelper();
+  
+  // Fetch team members using Nuxt Content
   const fetchTeamMembers = async (): Promise<TeamMember[]> => {
     try {
-      const apiUrl = createApiUrl('/api/content/team');
-      console.log('Fetching team members from:', apiUrl);
+      console.log('Fetching team members using Nuxt Content');
       
-      const result = await fetch(apiUrl)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`API error: ${response.status} ${response.statusText}`);
-          }
-          return response.json();
-        })
-        .catch(err => {
-          console.error('Team API failed:', err);
-          return [];
-        });
-
-      console.log('Raw team members result:', result);
+      // Use content helper to get all team members
+      const teamMembers = await contentHelper.findAll('team', {
+        where: { _extension: 'md' }
+      });
       
-      if (result && result.success === false) {
-        console.error('Error fetching team members:', result.error);
-        return [];
-      }
+      console.log('Team members from Content:', teamMembers);
       
-      if (Array.isArray(result)) {
+      if (teamMembers && Array.isArray(teamMembers) && teamMembers.length > 0) {
         // Map result to TeamMember interface
-        return result.map((member: any) => ({
-          id: String(member.id || ''),
-          name: String(member.name || ''),
-          position: String(member.position || ''),
-          bio: member.bio ? String(member.bio) : undefined,
-          image: member.image ? String(member.image) : undefined,
-          order: member.order ? Number(member.order) : undefined,
-          socials: member.socials || {}
-        }));
+        return teamMembers.map((member: any) => {
+          // Extract the ID from the path
+          const id = member._path?.split('/').pop() || '';
+          
+          return {
+            id,
+            name: String(member.name || ''),
+            position: String(member.position || ''),
+            bio: member.bio ? String(member.bio) : undefined,
+            image: member.image ? String(member.image) : undefined,
+            order: member.order ? Number(member.order) : undefined,
+            socials: member.socials || {}
+          };
+        }).sort((a: any, b: any) => (a.order || 999) - (b.order || 999));
       }
       
+      // Return empty array if no team members found
+      console.warn('No team members found in content');
       return [];
     } catch (err) {
-      console.error('Error fetching team members:', err);
+      console.error('Error fetching team members from content:', err);
       return [];
     }
   };

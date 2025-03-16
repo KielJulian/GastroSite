@@ -1,4 +1,5 @@
 import { useAsyncData } from '#imports';
+import { useContentHelper } from './useContentHelper';
 
 // Define interfaces
 interface MenuCategory {
@@ -53,6 +54,8 @@ interface LunchMenuItem {
 
 // Create the composable
 export const useRestaurantContent = () => {
+  // Get the content helper
+  const contentHelper = useContentHelper();
   
   /**
    * Get all menu categories
@@ -63,7 +66,7 @@ export const useRestaurantContent = () => {
       
       // Get the asyncData result
       const { data, error } = await useAsyncData(
-        'raw-menu-categories',
+        'menu-categories',
         () => fetchContentCategories()
       );
       
@@ -97,7 +100,7 @@ export const useRestaurantContent = () => {
       
       // Get the asyncData result
       const { data, error } = await useAsyncData(
-        'raw-menu-tags',
+        'menu-tags',
         () => fetchContentTags()
       );
       
@@ -117,22 +120,21 @@ export const useRestaurantContent = () => {
       return result;
     } catch (err) {
       console.error('Unexpected error in getMenuTags:', err);
-      // Return empty array
       return [];
     }
   };
   
   /**
-   * Get menu items with optional filtering
+   * Get all menu items
    */
-  const getMenuItems = async (categoryId?: string, tagIds?: string[]): Promise<MenuItem[]> => {
+  const getMenuItems = async (): Promise<MenuItem[]> => {
     try {
-      console.log('Fetching menu items', { categoryId, tagIds });
+      console.log('Fetching menu items');
       
       // Get the asyncData result
       const { data, error } = await useAsyncData(
-        'raw-menu-items',
-        () => fetchContentMenuItems()
+        'menu-items',
+        () => fetchContentItems()
       );
       
       // Handle errors and empty data
@@ -146,24 +148,9 @@ export const useRestaurantContent = () => {
         return [];
       }
       
-      // Get all items
-      let items = data.value as MenuItem[];
-      
-      // Filter by category if specified
-      if (categoryId) {
-        items = items.filter(item => item.category === categoryId);
-      }
-      
-      // Filter by tags if specified
-      if (tagIds && tagIds.length > 0) {
-        items = items.filter(item => 
-          tagIds.every(tagId => item.tags && item.tags.includes(tagId))
-        );
-      }
-      
-      console.log('Menu items result:', items.length);
-      // Sort by order
-      return items.sort((a, b) => a.order - b.order);
+      const result = data.value;
+      console.log('Menu items result:', result);
+      return result;
     } catch (err) {
       console.error('Unexpected error in getMenuItems:', err);
       return [];
@@ -171,178 +158,83 @@ export const useRestaurantContent = () => {
   };
   
   /**
-   * Get the latest lunch menu
+   * Get lunch menus
    */
-  const getLatestLunchMenu = async (): Promise<LunchMenu | null> => {
+  const getLunchMenus = async (): Promise<LunchMenu[]> => {
     try {
-      const lunchMenus = await fetchLunchMenus();
-      
-      // Check if we received a valid array response
-      if (!lunchMenus || !Array.isArray(lunchMenus) || lunchMenus.length === 0) {
-        console.error('No lunch menus found or invalid response format', lunchMenus);
-        return null;
-      }
-      
-      // Get current date
-      const today = new Date();
-      
-      // First try to find a menu that includes the current date
-      for (const menu of lunchMenus) {
-        if (!menu.startDate || !menu.endDate) continue;
-        
-        const startDate = new Date(menu.startDate);
-        const endDate = new Date(menu.endDate);
-        
-        if (today >= startDate && today <= endDate) {
-          return menu;
-        }
-      }
-      
-      // If no current menu, return the most recent one
-      // Sort by start date (descending)
-      const sortedMenus = [...lunchMenus].sort((a, b) => {
-        const dateA = a.startDate ? new Date(a.startDate).getTime() : 0;
-        const dateB = b.startDate ? new Date(b.startDate).getTime() : 0;
-        return dateB - dateA;
-      });
-      
-      return sortedMenus[0];
-    } catch (error) {
-      console.error('Error getting latest lunch menu:', error);
-      return null;
-    }
-  };
-  
-  /**
-   * Get team members
-   */
-  const getTeamMembers = async (limit?: number): Promise<TeamMember[]> => {
-    try {
-      console.log('Fetching team members');
+      console.log('Fetching lunch menus');
       
       // Get the asyncData result
       const { data, error } = await useAsyncData(
-        'raw-team-members',
-        () => fetchTeamMembers()
+        'lunch-menus',
+        () => fetchContentLunchMenus()
       );
       
       // Handle errors and empty data
       if (error.value) {
-        console.error('Error fetching team members:', error.value);
+        console.error('Error fetching lunch menus:', error.value);
         return [];
       }
       
       if (!data.value) {
-        console.warn('No team members found');
+        console.warn('No lunch menus found, returning empty array');
         return [];
       }
       
-      // Get all members
-      let members = data.value as TeamMember[];
-      
-      // Sort by order
-      members = members.sort((a, b) => (a.order || 999) - (b.order || 999));
-      
-      // Limit if needed
-      if (limit && limit > 0) {
-        members = members.slice(0, limit);
-      }
-      
-      console.log('Team members result:', members.length);
-      return members;
+      const result = data.value;
+      console.log('Lunch menus result:', result);
+      return result;
     } catch (err) {
-      console.error('Unexpected error in getTeamMembers:', err);
+      console.error('Unexpected error in getLunchMenus:', err);
       return [];
     }
   };
   
-  // Helper functions for content fetching
-  
-  // Helper to create a valid URL for both server and client side
-  const createApiUrl = (path: string): string => {
-    // Check if we're running on client or server
-    if (typeof window !== 'undefined') {
-      // Client-side - use relative URL for local development
-      // or absolute URL for production site
-      if (window.location.hostname === 'localhost') {
-        return path;
-      } else {
-        // In production, use the full URL
-        return `${window.location.origin}${path}`;
+  /**
+   * Get current lunch menu
+   */
+  const getCurrentLunchMenu = async (): Promise<LunchMenu | null> => {
+    try {
+      const lunchMenus = await getLunchMenus();
+      
+      if (!lunchMenus || lunchMenus.length === 0) {
+        console.warn('No lunch menus available');
+        return null;
       }
-    } else {
-      // Server-side - use absolute URL with origin from runtime config
-      try {
-        const config = useRuntimeConfig();
-        const baseUrl = config.public.apiBaseUrl || 'http://localhost:3000';
-        return `${baseUrl}${path}`;
-      } catch (err) {
-        console.error('Error creating API URL:', err);
-        return `http://localhost:3000${path}`;
+      
+      // Find the current lunch menu based on date
+      const today = new Date();
+      const currentMenu = lunchMenus.find(menu => {
+        const startDate = new Date(menu.startDate);
+        const endDate = new Date(menu.endDate);
+        return today >= startDate && today <= endDate;
+      });
+      
+      if (currentMenu) {
+        return currentMenu;
       }
+      
+      // If no current menu found, return the most recent one
+      console.warn('No current lunch menu found, returning most recent');
+      return lunchMenus[0];
+    } catch (err) {
+      console.error('Error getting current lunch menu:', err);
+      return null;
     }
   };
   
+  // Fetch categories using Nuxt Content
   const fetchContentCategories = async (): Promise<MenuCategory[]> => {
     try {
       console.log('Fetching categories using Nuxt Content');
       
-      try {
-        // Try using Nuxt Content directly first
-        const { data: categories } = await useAsyncData('menu-categories-content', () => 
-          $fetch('/api/_content/query', {
-            method: 'POST',
-            body: {
-              where: {
-                _path: { $contains: 'menu/categories' },
-                _extension: 'yaml'
-              }
-            }
-          })
-        );
-        
-        console.log('Raw categories from Content:', categories.value);
-        
-        if (categories.value && Array.isArray(categories.value) && categories.value.length > 0) {
-          const categoryData = categories.value[0];
-          if (categoryData && categoryData.categories && Array.isArray(categoryData.categories)) {
-            return categoryData.categories.map((category: any) => ({
-              id: String(category.id || ''),
-              name: String(category.name || ''),
-              description: String(category.description || ''),
-              order: Number(category.order || 0)
-            }));
-          }
-        }
-      } catch (contentErr) {
-        console.error('Error using Nuxt Content API for categories:', contentErr);
-      }
+      // Use content helper to get categories from the YAML file
+      const categoriesDoc = await contentHelper.findOne('menu/categories/categories');
       
-      // Fallback to our custom API
-      const apiUrl = createApiUrl('/api/content/menu/categories');
-      console.log('Falling back to API for categories:', apiUrl);
+      console.log('Categories from Content:', categoriesDoc);
       
-      const result = await fetch(apiUrl)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`API error: ${response.status} ${response.statusText}`);
-          }
-          return response.json();
-        })
-        .catch(err => {
-          console.error('Error fetching categories from API:', err);
-          return [];
-        });
-        
-      console.log('Raw categories from API:', result);
-      
-      if (result && result.success === false) {
-        console.error('Error fetching categories:', result.error);
-        return [];
-      }
-      
-      if (result && Array.isArray(result) && result.length > 0 && result[0]?.categories) {
-        return result[0].categories.map((category: any) => ({
+      if (categoriesDoc && categoriesDoc.categories && Array.isArray(categoriesDoc.categories)) {
+        return categoriesDoc.categories.map((category: any) => ({
           id: String(category.id || ''),
           name: String(category.name || ''),
           description: String(category.description || ''),
@@ -350,320 +242,118 @@ export const useRestaurantContent = () => {
         }));
       }
       
-      // Return empty array
-      console.warn('No categories found, returning empty array');
+      // Return empty array if no categories found
+      console.warn('No categories found in content');
       return [];
     } catch (err) {
-      console.error('Error fetching categories content:', err);
-      // Return empty array
+      console.error('Error fetching categories from content:', err);
       return [];
     }
   };
   
+  // Fetch tags using Nuxt Content
   const fetchContentTags = async (): Promise<MenuTag[]> => {
     try {
       console.log('Fetching tags using Nuxt Content');
       
-      try {
-        // Try using Nuxt Content directly first
-        const { data: tags } = await useAsyncData('menu-tags-content', () => 
-          $fetch('/api/_content/query', {
-            method: 'POST',
-            body: {
-              where: {
-                _path: { $contains: 'menu/tags' },
-                _extension: 'yaml'
-              }
-            }
-          })
-        );
-        
-        console.log('Raw tags from Content:', tags.value);
-        
-        if (tags.value && Array.isArray(tags.value) && tags.value.length > 0) {
-          const tagData = tags.value[0];
-          if (tagData && tagData.tags && Array.isArray(tagData.tags)) {
-            return tagData.tags.map((tag: any) => ({
-              id: String(tag.id || ''),
-              name: String(tag.name || ''),
-              icon: String(tag.icon || '')
-            }));
-          }
-        }
-      } catch (contentErr) {
-        console.error('Error using Nuxt Content API for tags:', contentErr);
-      }
+      // Use content helper to get tags from the YAML file
+      const tagsDoc = await contentHelper.findOne('menu/tags/tags');
       
-      // Fallback to our custom API
-      const apiUrl = createApiUrl('/api/content/menu/tags');
-      console.log('Falling back to API for tags:', apiUrl);
+      console.log('Tags from Content:', tagsDoc);
       
-      const result = await fetch(apiUrl)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`API error: ${response.status} ${response.statusText}`);
-          }
-          return response.json();
-        })
-        .catch(err => {
-          console.error('Error fetching tags from API:', err);
-          return [];
-        });
-        
-      console.log('Raw tags from API:', result);
-      
-      if (result && result.success === false) {
-        console.error('Error fetching tags:', result.error);
-        return [];
-      }
-      
-      if (result && Array.isArray(result) && result.length > 0 && result[0]?.tags) {
-        return result[0].tags.map((tag: any) => ({
+      if (tagsDoc && tagsDoc.tags && Array.isArray(tagsDoc.tags)) {
+        return tagsDoc.tags.map((tag: any) => ({
           id: String(tag.id || ''),
           name: String(tag.name || ''),
           icon: String(tag.icon || '')
         }));
       }
       
-      // Return empty array
-      console.warn('No tags found, returning empty array');
+      // Return empty array if no tags found
+      console.warn('No tags found in content');
       return [];
     } catch (err) {
-      console.error('Error fetching tags content:', err);
-      // Return empty array
+      console.error('Error fetching tags from content:', err);
       return [];
     }
   };
   
-  const fetchContentMenuItems = async (): Promise<MenuItem[]> => {
+  // Fetch menu items using Nuxt Content
+  const fetchContentItems = async (): Promise<MenuItem[]> => {
     try {
       console.log('Fetching menu items using Nuxt Content');
       
-      try {
-        // Use Nuxt Content directly
-        const { data: items } = await useAsyncData('menu-items-content', () => 
-          $fetch('/api/_content/query', {
-            method: 'POST',
-            body: {
-              where: {
-                _path: { $contains: 'menu/items' },
-                _extension: 'md'
-              }
-            }
-          })
-        );
-        
-        console.log('Raw menu items from Content:', items.value);
-        
-        if (items.value && Array.isArray(items.value)) {
-          return items.value.map((item: any) => ({
-            _path: item._path || undefined,
-            id: item._id || item.id || undefined,
+      // Use content helper to get all menu items
+      const menuItems = await contentHelper.findAll('menu/items', {
+        where: { _extension: 'md', _partial: false }
+      });
+      
+      console.log('Menu items from Content:', menuItems);
+      
+      if (menuItems && Array.isArray(menuItems) && menuItems.length > 0) {
+        return menuItems.map((item: any) => {
+          // Extract the ID from the path
+          const id = item._path?.split('/').pop() || '';
+          
+          return {
+            _path: item._path,
+            id,
             name: String(item.name || ''),
             description: String(item.description || ''),
             price: Number(item.price || 0),
             category: String(item.category || ''),
-            tags: Array.isArray(item.tags) ? item.tags.map(String) : [],
-            image: item.image || undefined,
-            order: Number(item.order || 0)
-          }));
-        }
-      } catch (contentErr) {
-        console.error('Error using Nuxt Content API:', contentErr);
+            tags: Array.isArray(item.tags) ? item.tags : (item.tags ? [item.tags] : []),
+            image: String(item.image || ''),
+            order: Number(item.order || 999)
+          };
+        }).sort((a: any, b: any) => (a.order || 999) - (b.order || 999));
       }
       
-      // Fallback to our custom API
-      const apiUrl = createApiUrl('/api/content/menu/items');
-      console.log('Falling back to API:', apiUrl);
-      
-      const result = await fetch(apiUrl)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`API error: ${response.status} ${response.statusText}`);
-          }
-          return response.json();
-        })
-        .catch(err => {
-          console.error('API fallback failed:', err);
-          return [];
-        });
-        
-      console.log('API fallback result:', result);
-      
-      if (Array.isArray(result)) {
-        return result.map((item: any) => ({
-          _path: item._path || undefined,
-          id: item._id || item.id || undefined,
-          name: String(item.name || ''),
-          description: String(item.description || ''),
-          price: Number(item.price || 0),
-          category: String(item.category || ''),
-          tags: Array.isArray(item.tags) ? item.tags.map(String) : [],
-          image: item.image || undefined,
-          order: Number(item.order || 0)
-        }));
-      }
-      
-      // Return empty array
-      console.warn('No valid menu items data found, returning empty array');
+      // Return empty array if no menu items found
+      console.warn('No menu items found in content');
       return [];
     } catch (err) {
-      console.error('Error fetching menu items content:', err);
-      // Return empty array
+      console.error('Error fetching menu items from content:', err);
       return [];
     }
   };
   
-  const fetchContentLunchMenu = async (): Promise<LunchMenu | null> => {
+  // Fetch lunch menus using Nuxt Content
+  const fetchContentLunchMenus = async (): Promise<LunchMenu[]> => {
     try {
-      // Get the current date
-      const now = new Date();
-      const dateString = now.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+      console.log('Fetching lunch menus using Nuxt Content');
       
-      // Use proper URL resolution
-      const apiUrl = createApiUrl('/api/content/lunch-menus');
-      console.log('Fetching lunch menu from:', apiUrl);
-      
-      const result = await fetch(apiUrl)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`API error: ${response.status} ${response.statusText}`);
-          }
-          return response.json();
-        })
-        .catch(err => {
-          console.error('Error fetching lunch menu:', err);
-          return [];
-        });
-      
-      console.log('Raw lunch menu result:', result);
-      
-      if (result && Array.isArray(result) && result.length > 0) {
-        // Filter for current lunch menu
-        const currentMenu = result.find(menu => 
-          menu.startDate <= dateString && menu.endDate >= dateString
-        );
-        
-        if (currentMenu) {
-          console.log('Found current lunch menu:', currentMenu);
-          return currentMenu;
-        }
-        
-        // Return the most recent menu otherwise
-        const sortedMenus = [...result].sort((a, b) => 
-          new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
-        );
-        
-        if (sortedMenus.length > 0) {
-          console.log('Found latest lunch menu:', sortedMenus[0]);
-          return sortedMenus[0];
-        }
-      }
-      
-      return null;
-    } catch (err) {
-      console.error('Error fetching lunch menu content:', err);
-      return null;
-    }
-  };
-  
-  const fetchTeamMembers = async (): Promise<TeamMember[]> => {
-    try {
-      // Try our custom endpoint with proper URL resolution
-      const apiUrl = createApiUrl('/api/content/team');
-      console.log('Fetching team members from:', apiUrl);
-      
-      const result = await fetch(apiUrl, {
-        headers: {
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache'
-        },
-        cache: 'no-store'
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`API error: ${response.status} ${response.statusText}`);
-          }
-          return response.json();
-        })
-        .catch(err => {
-          console.error('Custom API failed:', err);
-          return [];
-        });
-        
-      console.log('Raw team members result:', result);
-      
-      // Check if we got an error response
-      if (result && result.error) {
-        console.error('API returned error:', result.error);
-        // If the API returned teamMembers array along with error, use it
-        if (Array.isArray(result.teamMembers)) {
-          console.log('Using teamMembers from error response:', result.teamMembers.length);
-          return result.teamMembers;
-        }
-        // Otherwise return empty array
-        return [];
-      }
-      
-      if (Array.isArray(result)) {
-        return result.map((member: any) => ({
-          id: String(member.id || ''),
-          name: String(member.name || ''),
-          position: String(member.position || ''),
-          bio: member.bio ? String(member.bio) : undefined,
-          image: member.image ? String(member.image) : undefined,
-          order: member.order ? Number(member.order) : undefined,
-          socials: member.socials || {}
-        }));
-      }
-      
-      console.error('Unexpected result format:', typeof result, result);
-      return [];
-    } catch (err) {
-      console.error('Error fetching team members content:', err);
-      return [];
-    }
-  };
-  
-  const fetchLunchMenus = async (): Promise<LunchMenu[]> => {
-    try {
-      const apiUrl = createApiUrl('/api/content/lunch-menus');
-      console.log('Fetching lunch menus from:', apiUrl);
-      
-      const response = await fetch(apiUrl, {
-        headers: {
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache'
-        },
-        cache: 'no-store'
+      // Use content helper to get all lunch menus
+      const lunchMenus = await contentHelper.findAll('lunch-menus', {
+        where: { _extension: 'md' }
       });
       
-      if (!response.ok) {
-        throw new Error(`Failed to fetch lunch menus: ${response.status} ${response.statusText}`);
+      console.log('Lunch menus from Content:', lunchMenus);
+      
+      if (lunchMenus && Array.isArray(lunchMenus) && lunchMenus.length > 0) {
+        return lunchMenus.map((menu: any) => {
+          // Extract the ID from the path
+          const id = menu._path?.split('/').pop() || '';
+          
+          return {
+            id,
+            title: String(menu.title || 'Lunch Menu'),
+            startDate: String(menu.startDate || ''),
+            endDate: String(menu.endDate || ''),
+            items: Array.isArray(menu.items) ? menu.items : []
+          };
+        }).sort((a: any, b: any) => {
+          const dateA = new Date(a.startDate || '1970-01-01');
+          const dateB = new Date(b.startDate || '1970-01-01');
+          return dateB.getTime() - dateA.getTime();
+        });
       }
       
-      const data = await response.json();
-      
-      // Check if we got an error response
-      if (data && data.error) {
-        console.error('API returned error:', data.error);
-        // If the API returned lunchMenus array along with error, use it
-        if (Array.isArray(data.lunchMenus)) {
-          return data.lunchMenus;
-        }
-        // Otherwise return empty array
-        return [];
-      }
-      
-      // Check if we got a proper array
-      if (!Array.isArray(data)) {
-        console.error('Expected array but got:', typeof data, data);
-        return [];
-      }
-      
-      return data;
-    } catch (error) {
-      console.error('Error fetching lunch menus:', error);
+      // Return empty array if no lunch menus found
+      console.warn('No lunch menus found in content');
+      return [];
+    } catch (err) {
+      console.error('Error fetching lunch menus from content:', err);
       return [];
     }
   };
@@ -672,7 +362,7 @@ export const useRestaurantContent = () => {
     getMenuCategories,
     getMenuTags,
     getMenuItems,
-    getLatestLunchMenu,
-    getTeamMembers
+    getLunchMenus,
+    getCurrentLunchMenu
   };
 }; 

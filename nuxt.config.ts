@@ -13,22 +13,20 @@ export default defineNuxtConfig({
   ],
 
   nitro: {
-    preset: 'vercel',
-    routeRules: {
-      '/api/content/**': {
-        cache: false,
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0'
-        }
-      }
-    }
+    preset: 'vercel'
   },
 
   content: {
+    documentDriven: true,
     watch: {
       enabled: true
+    },
+    markdown: {
+      anchorLinks: true,
+      toc: {
+        depth: 3,
+        searchDepth: 3
+      }
     }
   },
 
