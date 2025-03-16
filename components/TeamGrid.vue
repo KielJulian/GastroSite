@@ -28,10 +28,10 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted } from 'vue';
-import { useRestaurantContent } from '~/composables/useContent';
+import { useRestaurantContent } from '~/composables/useRestaurantContent';
 
 interface TeamMember {
-  _path: string;
+  id?: string;
   name: string;
   position: string;
   bio: string;
@@ -48,13 +48,13 @@ const props = defineProps({
 
 // Fetch team members from CMS
 const { getTeamMembers } = useRestaurantContent();
-// Create a unique key for this request
-const uniqueKey = "team-members-" + Date.now();
+// Use a static key for better caching
+const uniqueKey = "team-members";
 const { data: teamMembers, pending, error, refresh } = useAsyncData(
   uniqueKey, 
   () => getTeamMembers(props.limit),
   { 
-    server: false,
+    server: true,
     immediate: true,
     watch: [() => props.limit]
   }

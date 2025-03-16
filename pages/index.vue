@@ -33,18 +33,18 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue';
-import { useRestaurantContent } from '~/composables/useContent';
+import { useRestaurantContent } from '~/composables/useRestaurantContent';
 
 // Fetch the latest lunch menu
 const { getLatestLunchMenu } = useRestaurantContent();
-// Create a unique key for this request
-const lunchMenuKey = 'homepage-lunch-menu-' + Date.now();
+// Use a static key for better caching
+const lunchMenuKey = 'homepage-lunch-menu';
 
 const { data: lunchMenu, pending: lunchMenuPending, error: lunchMenuError, refresh: refreshLunchMenu } = useAsyncData(
   lunchMenuKey, 
   () => getLatestLunchMenu(),
   { 
-    server: false,
+    server: true,
     immediate: true
   }
 );

@@ -1,17 +1,17 @@
 categories:
-  - id: "pizza"
-    name: "Pizza"
-    description: "Our stone-baked pizzas"
+  - id: pizza
+    name: Pizza
+    description: Our stone-baked pizzas
     order: 1
-  - id: "pasta"
-    name: "Pasta"
-    description: "Homemade pasta dishes"
+  - id: pasta
+    name: Pasta
+    description: Homemade pasta dishes
     order: 2
-  - id: "salads"
-    name: "Salads"
-    description: "Fresh seasonal salads"
+  - id: salads
+    name: Salads
+    description: Fresh seasonal salads
     order: 3
-  - id: "desserts"
-    name: "Desserts"
-    description: "Sweet treats"
+  - id: desserts
+    name: Desserts
+    description: Sweet treats
     order: 4

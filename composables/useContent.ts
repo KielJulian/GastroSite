@@ -1,7 +1,7 @@
 import { useRuntimeConfig } from '#app';
 import { useAsyncData } from '#imports';
-// When using Nuxt Content, queryContent is available globally
-// Define it for TypeScript
+
+// Simple declaration for queryContent
 declare const queryContent: any;
 
 interface MenuCategory {
@@ -62,17 +62,35 @@ export const useRestaurantContent = () => {
    */
   const getMenuCategories = async (): Promise<MenuCategory[]> => {
     try {
-      const { data } = await useAsyncData('menu-categories', () => {
-        return queryContent('menu/categories')
-          .where({ _locale: { $eq: 'en' } })
-          .find();
-      }, { server: false });
+      console.log('Fetching menu categories...');
+      // Create unique key to prevent caching
+      const timestamp = Date.now();
+      const uniqueKey = `menu-categories-${timestamp}`;
       
-      // Handle the array safely
-      if (data.value && Array.isArray(data.value) && data.value.length > 0) {
-        return data.value[0].categories || [];
+      const { data } = await useAsyncData(uniqueKey, async () => {
+        const result = await queryContent('menu/categories')
+          .find();
+        console.log('Categories query result:', result);
+        
+        // Handle the array safely
+        if (result && Array.isArray(result) && result.length > 0) {
+          if (result[0].categories) {
+            console.log('Found categories array in YAML');
+            return result[0].categories;
+          }
+          return result;
+        }
+        return [];
+      }, { 
+        server: true, // Enable server-side rendering
+      });
+      
+      if (!data.value) {
+        console.warn('No categories data found');
+        return [];
       }
-      return [];
+      
+      return data.value;
     } catch (error) {
       console.error('Error fetching menu categories:', error);
       return [];
@@ -84,17 +102,35 @@ export const useRestaurantContent = () => {
    */
   const getMenuTags = async (): Promise<MenuTag[]> => {
     try {
-      const { data } = await useAsyncData('menu-tags', () => {
-        return queryContent('menu/tags')
-          .where({ _locale: { $eq: 'en' } })
-          .find();
-      }, { server: false });
+      console.log('Fetching menu tags...');
+      // Create unique key to prevent caching
+      const timestamp = Date.now();
+      const uniqueKey = `menu-tags-${timestamp}`;
       
-      // Handle the array safely
-      if (data.value && Array.isArray(data.value) && data.value.length > 0) {
-        return data.value[0].tags || [];
+      const { data } = await useAsyncData(uniqueKey, async () => {
+        const result = await queryContent('menu/tags')
+          .find();
+        console.log('Tags query result:', result);
+        
+        // Handle the array safely
+        if (result && Array.isArray(result) && result.length > 0) {
+          if (result[0].tags) {
+            console.log('Found tags array in YAML');
+            return result[0].tags;
+          }
+          return result;
+        }
+        return [];
+      }, { 
+        server: true, // Enable server-side rendering
+      });
+      
+      if (!data.value) {
+        console.warn('No tags data found');
+        return [];
       }
-      return [];
+      
+      return data.value;
     } catch (error) {
       console.error('Error fetching menu tags:', error);
       return [];
@@ -106,35 +142,65 @@ export const useRestaurantContent = () => {
    */
   const getMenuItems = async (categoryId?: string, tagIds?: string[]): Promise<MenuItem[]> => {
     try {
-      // Create a query for the menu items
-      let query = queryContent('menu/items');
+      console.log('Fetching menu items, category:', categoryId, 'tags:', tagIds);
       
-      // Get all menu items
-      const cacheKey = categoryId ? ("menu-items-" + categoryId) : 'menu-items-all';
+      // Create a unique cache key with timestamp to prevent caching
+      const timestamp = Date.now();
+      const cacheKey = categoryId 
+        ? `menu-items-${categoryId}-${timestamp}` 
+        : `menu-items-all-${timestamp}`;
+      
+      // Add debugging
+      console.log('Query path:', 'menu/items');
+      
       const { data } = await useAsyncData(cacheKey, 
-        () => query.find(),
-        { server: false }
+        async () => {
+          try {
+            // Direct query without composable layer
+            const result = await queryContent('menu/items').find();
+            console.log('Menu items query result:', result);
+            return result;
+          } catch (queryError) {
+            console.error('Error in content query:', queryError);
+            throw queryError;
+          }
+        },
+        { 
+          server: true, // Enable server-side rendering
+          immediate: true
+        }
       );
       
-      if (!data.value) return [];
+      if (!data.value) {
+        console.warn('No menu items data returned');
+        return [];
+      }
+      
+      console.log('Menu items raw data:', data.value);
       
       // Filter and process the items
       let items = data.value as MenuItem[];
       
       // Filter by category if specified
       if (categoryId) {
+        console.log('Filtering by category:', categoryId);
         items = items.filter(item => item.category === categoryId);
+        console.log('After category filter:', items.length, 'items');
       }
       
       // Filter by tags if specified
       if (tagIds && tagIds.length > 0) {
+        console.log('Filtering by tags:', tagIds);
         items = items.filter(item => 
           tagIds.every(tagId => item.tags && item.tags.includes(tagId))
         );
+        console.log('After tag filter:', items.length, 'items');
       }
       
       // Sort by order
-      return items.sort((a, b) => a.order - b.order);
+      const sortedItems = items.sort((a, b) => a.order - b.order);
+      console.log('Returning', sortedItems.length, 'sorted menu items');
+      return sortedItems;
     } catch (error) {
       console.error('Error fetching menu items:', error);
       return [];
@@ -146,38 +212,57 @@ export const useRestaurantContent = () => {
    */
   const getLatestLunchMenu = async (): Promise<LunchMenu | null> => {
     try {
+      console.log('Fetching latest lunch menu...');
       // Get the current date
       const now = new Date();
       const dateString = now.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+      console.log('Current date for lunch menu:', dateString);
+      
+      // Create unique key to prevent caching
+      const timestamp = Date.now();
+      const uniqueKey = `latest-lunch-menu-${timestamp}`;
       
       // Find lunch menus that are active now (where startDate <= now <= endDate)
-      const { data } = await useAsyncData('latest-lunch-menu', () => {
-        return queryContent('lunch-menus')
+      const { data } = await useAsyncData(uniqueKey, async () => {
+        const result = await queryContent('lunch-menus')
           .where({ startDate: { $lte: dateString } })
           .where({ endDate: { $gte: dateString } })
           .sort({ startDate: -1 }) // Get the most recent one if there are multiple
           .limit(1)
           .find();
-      }, { server: false });
+          
+        console.log('Lunch menu query result:', result);
+        return result;
+      }, { server: true });
       
       if (!data.value || !Array.isArray(data.value) || data.value.length === 0) {
+        console.log('No current lunch menu found, looking for the newest one...');
         // If no current menu found, get the newest one
-        const { data: latestData } = await useAsyncData('future-lunch-menu', () => {
-          return queryContent('lunch-menus')
+        const futureKey = `future-lunch-menu-${timestamp}`;
+        const { data: latestData } = await useAsyncData(futureKey, async () => {
+          const result = await queryContent('lunch-menus')
             .sort({ startDate: -1 })
             .limit(1)
             .find();
-        }, { server: false });
+            
+          console.log('Future lunch menu query result:', result);
+          return result;
+        }, { server: true });
         
         if (latestData.value && Array.isArray(latestData.value) && latestData.value.length > 0) {
+          console.log('Found future lunch menu:', latestData.value[0]);
           return latestData.value[0];
         }
+        
+        console.log('No lunch menu found at all');
         return null;
       }
       
       if (data.value && Array.isArray(data.value) && data.value.length > 0) {
+        console.log('Found current lunch menu:', data.value[0]);
         return data.value[0];
       }
+      
       return null;
     } catch (error) {
       console.error('Error fetching latest lunch menu:', error);
@@ -199,7 +284,7 @@ export const useRestaurantContent = () => {
           .where({ _partial: { $ne: true } }) // Skip partial content like _template.md
           .find();
       }, { 
-        server: false,
+        server: true, // Enable server-side rendering
         // Important for dynamic updates: don't cache the results
         immediate: true,
         // No watch needed, we're using a unique key for each call
@@ -245,4 +330,4 @@ export const useRestaurantContent = () => {
     getTeamMembers,
     updateContentOrder
   };
-};
+}; 

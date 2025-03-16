@@ -84,27 +84,38 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue';
-import { useRestaurantContent } from '~/composables/useContent';
+import { ref, computed, onMounted, onUnmounted, onServerPrefetch } from 'vue';
+import { useRestaurantContent } from '~/composables/useRestaurantContent';
 
-const { getMenuCategories, getMenuTags, getMenuItems, getLatestLunchMenu } = useRestaurantContent();
+// Use our composable
+const { 
+  getMenuCategories, 
+  getMenuTags, 
+  getMenuItems, 
+  getLatestLunchMenu 
+} = useRestaurantContent();
 
 // Active tag filters state
 const activeTagFilters = ref<string[]>([]);
 
-// Create unique keys for each request
-const categoriesKey = 'menu-categories-' + Date.now();
-const tagsKey = 'menu-tags-' + Date.now();
-const menuItemsKey = 'menu-items-' + Date.now();
-const lunchMenuKey = 'latest-lunch-menu-' + Date.now();
+// Create unique keys for each request - using string keys without timestamps for better SSR caching
+const categoriesKey = 'menu-categories';
+const tagsKey = 'menu-tags';
+const menuItemsKey = 'menu-items';
+const lunchMenuKey = 'latest-lunch-menu';
 
 // Fetch menu categories
 const { data: categories, pending: categoriesPending, error: categoriesError, refresh: refreshCategories } = useAsyncData(
   categoriesKey, 
   () => getMenuCategories(),
   { 
-    server: false,
-    immediate: true
+    immediate: true,
+    server: true,
+    lazy: false,
+    transform: (data) => {
+      console.log('Categories data transformed:', data);
+      return data || [];
+    }
   }
 );
 
@@ -113,8 +124,13 @@ const { data: tags, pending: tagsPending, error: tagsError, refresh: refreshTags
   tagsKey, 
   () => getMenuTags(),
   { 
-    server: false,
-    immediate: true
+    immediate: true,
+    server: true,
+    lazy: false,
+    transform: (data) => {
+      console.log('Tags data transformed:', data);
+      return data || [];
+    }
   }
 );
 
@@ -123,8 +139,13 @@ const { data: menuItems, pending: menuItemsPending, error: menuItemsError, refre
   menuItemsKey, 
   () => getMenuItems(),
   { 
-    server: false,
-    immediate: true
+    immediate: true,
+    server: true,
+    lazy: false,
+    transform: (data) => {
+      console.log('Menu items data transformed:', data);
+      return data || [];
+    }
   }
 );
 
@@ -133,24 +154,32 @@ const { data: lunchMenu, pending: lunchMenuPending, error: lunchMenuError, refre
   lunchMenuKey, 
   () => getLatestLunchMenu(),
   { 
-    server: false,
-    immediate: true
+    immediate: true,
+    server: true,
+    lazy: false,
+    transform: (data) => {
+      console.log('Lunch menu data transformed:', data);
+      return data;
+    }
   }
 );
 
-// Set up a refresh interval to check for content updates
-onMounted(() => {
-  // Refresh the data every 30 seconds to check for content updates
-  const refreshInterval = setInterval(() => {
-    refreshCategories();
-    refreshTags();
-    refreshMenuItems();
-    refreshLunchMenu();
-  }, 30000);
+// Make sure data is prefetched on server
+onServerPrefetch(async () => {
+  console.log('Server prefetching menu data');
+  await Promise.all([
+    refreshCategories(),
+    refreshTags(),
+    refreshMenuItems(),
+    refreshLunchMenu()
+  ]);
+});
 
-  onUnmounted(() => {
-    clearInterval(refreshInterval);
-  });
+// After a successful load, log the data to help with debugging
+onMounted(() => {
+  console.log('Menu mounted, categories:', categories.value);
+  console.log('Menu mounted, tags:', tags.value);
+  console.log('Menu mounted, items:', menuItems.value);
 });
 
 // Computed values for loading states

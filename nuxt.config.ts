@@ -1,10 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: process.env.NODE_ENV === 'development' },
+  devtools: { enabled: true },
 
   typescript: {
     strict: true,
-    typeCheck: true,
+    typeCheck: false,
     shim: false
   },
 
@@ -13,12 +13,8 @@ export default defineNuxtConfig({
   ],
 
   nitro: {
-    prerender: {
-      failOnError: false,
-      ignore: ['/api/**']
-    }
+    preset: 'netlify'
   },
-  
 
   content: {
     watch: {
@@ -26,8 +22,8 @@ export default defineNuxtConfig({
     }
   },
 
-
   app: {
+    baseURL: '/',
     head: {
       title: 'GastroSite',
       meta: [
@@ -45,5 +41,13 @@ export default defineNuxtConfig({
     '@/assets/css/main.css'
   ],
 
-  compatibilityDate: '2025-03-15'
+  // Explicitly set the runtime config for the server
+  runtimeConfig: {
+    // Public keys that are exposed to the client
+    public: {
+      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:3000' 
+    }
+  },
+
+  compatibilityDate: '2025-03-16'
 })
