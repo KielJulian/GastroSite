@@ -1,10 +1,10 @@
 ---
 title: This Week's Lunch Menu
-startDate: 2023-03-15
-endDate: 2026-03-25
+startDate: 2023-03-15T00:00:00.000Z
+endDate: 2026-03-25T00:00:00.000Z
 items:
   - day: Monday
-    name: Mushroom Risotto
+    name: Mushroom Risotto9000
     description: Creamy risotto with wild mushrooms and parmesan
     price: 12.5
     order: 1
