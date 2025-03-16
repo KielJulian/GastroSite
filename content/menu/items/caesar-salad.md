@@ -1,5 +1,5 @@
 ---
-name: Caesar Salad3
+name: Caesar Salad300
 description: Crisp romaine lettuce, croutons, Parmesan cheese, and our homemade
   Caesar dressing
 price: 10.5
