@@ -20,13 +20,7 @@
       </section>
 
       <!-- Team Section -->
-      <section class="section">
-        <div class="container">
-          <h2 class="section-title">Our Team</h2>
-          <p class="section-description text-center">Meet the culinary experts who make the magic happen in our kitchen.</p>
-          <TeamGrid />
-        </div>
-      </section>
+      <TeamSection />
 
       <!-- Our Dining Area Section -->
       <DiningArea />
@@ -38,14 +32,34 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, onUnmounted } from 'vue';
 import { useRestaurantContent } from '~/composables/useContent';
 
 // Fetch the latest lunch menu
 const { getLatestLunchMenu } = useRestaurantContent();
-const { data: lunchMenu, pending: lunchMenuPending, error: lunchMenuError } = useAsyncData(
-  'homepage-lunch-menu', 
-  () => getLatestLunchMenu()
+// Create a unique key for this request
+const lunchMenuKey = 'homepage-lunch-menu-' + Date.now();
+
+const { data: lunchMenu, pending: lunchMenuPending, error: lunchMenuError, refresh: refreshLunchMenu } = useAsyncData(
+  lunchMenuKey, 
+  () => getLatestLunchMenu(),
+  { 
+    server: false,
+    immediate: true
+  }
 );
+
+// Set up a refresh interval to check for content updates
+onMounted(() => {
+  // Refresh the data every 30 seconds to check for content updates
+  const refreshInterval = setInterval(() => {
+    refreshLunchMenu();
+  }, 30000);
+
+  onUnmounted(() => {
+    clearInterval(refreshInterval);
+  });
+});
 </script>
 
 <style scoped>

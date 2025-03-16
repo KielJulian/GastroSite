@@ -1,4 +1,8 @@
-// Direct import from CMS files to fix build issues
+import { useRuntimeConfig } from '#app';
+import { useAsyncData } from '#imports';
+// When using Nuxt Content, queryContent is available globally
+// Define it for TypeScript
+declare const queryContent: any;
 
 interface MenuCategory {
   id: string;
@@ -51,199 +55,24 @@ interface LunchMenu {
 }
 
 export const useRestaurantContent = () => {
-  // Hardcoded data from CMS files
-  const menuCategories: MenuCategory[] = [
-    { id: "pizza", name: "Pizza", description: "Our stone-baked pizzas", order: 1 },
-    { id: "pasta", name: "Pasta", description: "Homemade pasta dishes", order: 2 },
-    { id: "salads", name: "Salads", description: "Fresh seasonal salads", order: 3 },
-    { id: "desserts", name: "Desserts", description: "Sweet treats", order: 4 }
-  ];
-
-  const menuTags: MenuTag[] = [
-    { id: "vegetarian", name: "Vegetarian", icon: "leaf" },
-    { id: "vegan", name: "Vegan", icon: "plant" },
-    { id: "spicy", name: "Spicy", icon: "fire" },
-    { id: "gluten-free", name: "Gluten-Free", icon: "wheat-slash" }
-  ];
-
-  const menuItems: MenuItem[] = [
-    {
-      id: 'margherita-pizza',
-      name: 'Margherita Pizza',
-      description: 'Classic pizza with tomato sauce, mozzarella, and fresh basil',
-      price: 13.4,
-      category: 'pizza',
-      tags: ['vegetarian'],
-      image: '/images/menu/margherita-pizza.jpg',
-      order: 1
-    },
-    {
-      id: 'veggie-pizza',
-      name: 'Vegetable Supreme Pizza',
-      description: 'Loaded with fresh seasonal vegetables, mushrooms, and our signature tomato sauce',
-      price: 14.9,
-      category: 'pizza',
-      tags: ['vegetarian', 'vegan'],
-      image: '/images/menu/veggie-pizza.jpg',
-      order: 2
-    },
-    {
-      id: 'carbonara-pasta',
-      name: 'Carbonara Pasta',
-      description: 'Classic Italian pasta with pancetta, egg, pecorino romano, and black pepper',
-      price: 12.9,
-      category: 'pasta',
-      tags: [],
-      order: 1
-    },
-    {
-      id: 'caesar-salad',
-      name: 'Caesar Salad',
-      description: 'Romaine lettuce with Caesar dressing, croutons, and parmesan cheese',
-      price: 9.9,
-      category: 'salads',
-      tags: ['vegetarian'],
-      order: 1
-    },
-    {
-      id: 'tiramisu',
-      name: 'Tiramisu',
-      description: 'Traditional Italian dessert with coffee-soaked ladyfingers and mascarpone cream',
-      price: 6.9,
-      category: 'desserts',
-      tags: ['vegetarian'],
-      order: 1
-    }
-  ];  
-
-  const teamMembers: TeamMember[] = [
-    {
-      id: 'jane-doe',
-      name: 'Jane Doe',
-      position: 'Head Chef',
-      bio: 'Jane has 15 years of experience in the culinary world, specializing in Italian cuisine. She has worked in Michelin-starred restaurants across Europe before joining our team.',
-      image: '/images/team/jane-doe.jpg',
-      order: 1
-    },
-    {
-      id: 'john-smith',
-      name: 'John Smith',
-      position: 'Sous Chef',
-      bio: 'John trained at the Culinary Institute of America and specializes in modern European cuisine. He brings creative flair to our seasonal menu items.',
-      image: '/images/team/john-smith.jpg',
-      order: 2
-    },
-    {
-      id: 'maria-garcia',
-      name: 'Maria Garcia',
-      position: 'Pastry Chef',
-      bio: 'Maria is a master of sweet creations with a background in French pastry. Her desserts combine traditional techniques with innovative flavor combinations.',
-      image: '/images/team/maria-garcia.jpg',
-      order: 3
-    },
-    {
-      id: 'thomas-mueller',
-      name: 'Thomas Müller',
-      position: 'Restaurant Manager',
-      bio: 'Thomas has a degree in hospitality management and oversees all operations of the restaurant. He ensures that every guest has an exceptional dining experience.',
-      image: '/images/team/thomas-mueller.jpg',
-      order: 4
-    },
-    {
-      id: 'sophia-chen',
-      name: 'Sophia Chen',
-      position: 'Sommelier',
-      bio: 'Sophia is our wine expert with certification from the Court of Master Sommeliers. She has curated our wine selection to perfectly complement our menu.',
-      image: '/images/team/sophia-chen.jpg',
-      order: 5
-    }
-  ];
-
-  const lunchMenu: LunchMenu = {
-    startDate: "2025-03-18",
-    endDate: "2025-03-22",
-    title: "Spring Special Week",
-    items: [
-      {
-        day: "Monday",
-        name: "Mushroom Risotto",
-        description: "Creamy arborio rice with seasonal mushrooms",
-        price: 9.90,
-        order: 1
-      },
-      {
-        day: "Monday",
-        name: "Tomato Soup",
-        description: "Classic tomato soup with basil and croutons",
-        price: 6.90,
-        order: 2
-      },
-      {
-        day: "Tuesday",
-        name: "Chicken Curry",
-        description: "Tender chicken pieces in a mild curry sauce with rice",
-        price: 10.90,
-        order: 1
-      },
-      {
-        day: "Tuesday",
-        name: "Vegetable Quiche",
-        description: "Homemade quiche with seasonal vegetables and a side salad",
-        price: 8.90,
-        order: 2
-      },
-      {
-        day: "Wednesday",
-        name: "Beef Goulash",
-        description: "Slow-cooked beef goulash with potatoes and vegetables",
-        price: 11.90,
-        order: 1
-      },
-      {
-        day: "Wednesday",
-        name: "Stuffed Bell Peppers",
-        description: "Bell peppers stuffed with rice, vegetables, and feta cheese",
-        price: 9.90,
-        order: 2
-      },
-      {
-        day: "Thursday",
-        name: "Fish & Chips",
-        description: "Crispy fried fish with potato wedges and homemade tartar sauce",
-        price: 12.90,
-        order: 1
-      },
-      {
-        day: "Thursday",
-        name: "Pasta Primavera",
-        description: "Penne with spring vegetables in a light cream sauce",
-        price: 8.90,
-        order: 2
-      },
-      {
-        day: "Friday",
-        name: "Wiener Schnitzel",
-        description: "Traditional breaded veal schnitzel with potato salad",
-        price: 13.90,
-        order: 1
-      },
-      {
-        day: "Friday",
-        name: "Spinach Lasagna",
-        description: "Homemade lasagna with spinach, ricotta, and tomato sauce",
-        price: 9.90,
-        order: 2
-      }
-    ]
-  };
-
+  const config = useRuntimeConfig();
+  
   /**
    * Get all menu categories sorted by order
    */
   const getMenuCategories = async (): Promise<MenuCategory[]> => {
     try {
-      // Return the hardcoded data for now
-      return menuCategories;
+      const { data } = await useAsyncData('menu-categories', () => {
+        return queryContent('menu/categories')
+          .where({ _locale: { $eq: 'en' } })
+          .find();
+      }, { server: false });
+      
+      // Handle the array safely
+      if (data.value && Array.isArray(data.value) && data.value.length > 0) {
+        return data.value[0].categories || [];
+      }
+      return [];
     } catch (error) {
       console.error('Error fetching menu categories:', error);
       return [];
@@ -255,8 +84,17 @@ export const useRestaurantContent = () => {
    */
   const getMenuTags = async (): Promise<MenuTag[]> => {
     try {
-      // Return the hardcoded data for now
-      return menuTags;
+      const { data } = await useAsyncData('menu-tags', () => {
+        return queryContent('menu/tags')
+          .where({ _locale: { $eq: 'en' } })
+          .find();
+      }, { server: false });
+      
+      // Handle the array safely
+      if (data.value && Array.isArray(data.value) && data.value.length > 0) {
+        return data.value[0].tags || [];
+      }
+      return [];
     } catch (error) {
       console.error('Error fetching menu tags:', error);
       return [];
@@ -268,23 +106,35 @@ export const useRestaurantContent = () => {
    */
   const getMenuItems = async (categoryId?: string, tagIds?: string[]): Promise<MenuItem[]> => {
     try {
-      // Filter items based on parameters
-      let filteredItems = [...menuItems];
+      // Create a query for the menu items
+      let query = queryContent('menu/items');
+      
+      // Get all menu items
+      const cacheKey = categoryId ? ("menu-items-" + categoryId) : 'menu-items-all';
+      const { data } = await useAsyncData(cacheKey, 
+        () => query.find(),
+        { server: false }
+      );
+      
+      if (!data.value) return [];
+      
+      // Filter and process the items
+      let items = data.value as MenuItem[];
       
       // Filter by category if specified
       if (categoryId) {
-        filteredItems = filteredItems.filter(item => item.category === categoryId);
+        items = items.filter(item => item.category === categoryId);
       }
       
       // Filter by tags if specified
       if (tagIds && tagIds.length > 0) {
-        filteredItems = filteredItems.filter(item => 
+        items = items.filter(item => 
           tagIds.every(tagId => item.tags && item.tags.includes(tagId))
         );
       }
       
       // Sort by order
-      return filteredItems.sort((a, b) => a.order - b.order);
+      return items.sort((a, b) => a.order - b.order);
     } catch (error) {
       console.error('Error fetching menu items:', error);
       return [];
@@ -296,8 +146,39 @@ export const useRestaurantContent = () => {
    */
   const getLatestLunchMenu = async (): Promise<LunchMenu | null> => {
     try {
-      // Return the hardcoded lunch menu
-      return lunchMenu;
+      // Get the current date
+      const now = new Date();
+      const dateString = now.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+      
+      // Find lunch menus that are active now (where startDate <= now <= endDate)
+      const { data } = await useAsyncData('latest-lunch-menu', () => {
+        return queryContent('lunch-menus')
+          .where({ startDate: { $lte: dateString } })
+          .where({ endDate: { $gte: dateString } })
+          .sort({ startDate: -1 }) // Get the most recent one if there are multiple
+          .limit(1)
+          .find();
+      }, { server: false });
+      
+      if (!data.value || !Array.isArray(data.value) || data.value.length === 0) {
+        // If no current menu found, get the newest one
+        const { data: latestData } = await useAsyncData('future-lunch-menu', () => {
+          return queryContent('lunch-menus')
+            .sort({ startDate: -1 })
+            .limit(1)
+            .find();
+        }, { server: false });
+        
+        if (latestData.value && Array.isArray(latestData.value) && latestData.value.length > 0) {
+          return latestData.value[0];
+        }
+        return null;
+      }
+      
+      if (data.value && Array.isArray(data.value) && data.value.length > 0) {
+        return data.value[0];
+      }
+      return null;
     } catch (error) {
       console.error('Error fetching latest lunch menu:', error);
       return null;
@@ -309,15 +190,35 @@ export const useRestaurantContent = () => {
    */
   const getTeamMembers = async (limit?: number): Promise<TeamMember[]> => {
     try {
-      // Sort by order
-      let sortedMembers = [...teamMembers].sort((a, b) => a.order - b.order);
+      // Reset content cache before fetching to ensure fresh data
+      // Create a unique key based on the timestamp
+      const timestamp = Date.now();
+      const uniqueKey = "team-members-" + timestamp;
+      const { data } = await useAsyncData(uniqueKey, () => {
+        return queryContent('team')
+          .where({ _partial: { $ne: true } }) // Skip partial content like _template.md
+          .find();
+      }, { 
+        server: false,
+        // Important for dynamic updates: don't cache the results
+        immediate: true,
+        // No watch needed, we're using a unique key for each call
+      });
       
-      // Apply limit if specified
-      if (limit && limit > 0) {
-        sortedMembers = sortedMembers.slice(0, limit);
+      if (!data.value) return [];
+      
+      // Sort by order and apply limit if needed
+      let members: TeamMember[] = [];
+      
+      if (data.value && Array.isArray(data.value)) {
+        members = [...data.value].sort((a, b) => a.order - b.order);
       }
       
-      return sortedMembers;
+      if (limit && limit > 0) {
+        members = members.slice(0, limit);
+      }
+      
+      return members;
     } catch (error) {
       console.error('Error fetching team members:', error);
       return [];
@@ -332,7 +233,7 @@ export const useRestaurantContent = () => {
     collection: string, 
     items: Array<{ _id: string; order: number }>
   ): Promise<void> => {
-    console.log(`Update order for ${collection} requested (not implemented)`, items);
+    console.log("Update order for " + collection + " requested (not implemented)", items);
     // In a real application, this would update the order in the CMS
   };
 

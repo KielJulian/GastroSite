@@ -20,7 +20,15 @@ export default defineNuxtConfig({
   },
   
 
-  content: {},
+  content: {
+    experimental: {
+      clientDB: true
+    },
+    documentDriven: true,
+    watch: {
+      enabled: true
+    }
+  },
 
 
   app: {

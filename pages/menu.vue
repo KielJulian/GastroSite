@@ -83,38 +83,75 @@
   </NuxtLayout>
 </template>
 
-<script setup>
-import { ref, computed } from 'vue';
+<script setup lang="ts">
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useRestaurantContent } from '~/composables/useContent';
 
 const { getMenuCategories, getMenuTags, getMenuItems, getLatestLunchMenu } = useRestaurantContent();
 
 // Active tag filters state
-const activeTagFilters = ref([]);
+const activeTagFilters = ref<string[]>([]);
+
+// Create unique keys for each request
+const categoriesKey = 'menu-categories-' + Date.now();
+const tagsKey = 'menu-tags-' + Date.now();
+const menuItemsKey = 'menu-items-' + Date.now();
+const lunchMenuKey = 'latest-lunch-menu-' + Date.now();
 
 // Fetch menu categories
-const { data: categories, pending: categoriesPending, error: categoriesError } = useAsyncData(
-  'menu-categories', 
-  () => getMenuCategories()
+const { data: categories, pending: categoriesPending, error: categoriesError, refresh: refreshCategories } = useAsyncData(
+  categoriesKey, 
+  () => getMenuCategories(),
+  { 
+    server: false,
+    immediate: true
+  }
 );
 
 // Fetch menu tags
-const { data: tags, pending: tagsPending, error: tagsError } = useAsyncData(
-  'menu-tags', 
-  () => getMenuTags()
+const { data: tags, pending: tagsPending, error: tagsError, refresh: refreshTags } = useAsyncData(
+  tagsKey, 
+  () => getMenuTags(),
+  { 
+    server: false,
+    immediate: true
+  }
 );
 
 // Fetch menu items
-const { data: menuItems, pending: menuItemsPending, error: menuItemsError } = useAsyncData(
-  'menu-items', 
-  () => getMenuItems()
+const { data: menuItems, pending: menuItemsPending, error: menuItemsError, refresh: refreshMenuItems } = useAsyncData(
+  menuItemsKey, 
+  () => getMenuItems(),
+  { 
+    server: false,
+    immediate: true
+  }
 );
 
 // Fetch latest lunch menu
-const { data: lunchMenu, pending: lunchMenuPending, error: lunchMenuError } = useAsyncData(
-  'latest-lunch-menu', 
-  () => getLatestLunchMenu()
+const { data: lunchMenu, pending: lunchMenuPending, error: lunchMenuError, refresh: refreshLunchMenu } = useAsyncData(
+  lunchMenuKey, 
+  () => getLatestLunchMenu(),
+  { 
+    server: false,
+    immediate: true
+  }
 );
+
+// Set up a refresh interval to check for content updates
+onMounted(() => {
+  // Refresh the data every 30 seconds to check for content updates
+  const refreshInterval = setInterval(() => {
+    refreshCategories();
+    refreshTags();
+    refreshMenuItems();
+    refreshLunchMenu();
+  }, 30000);
+
+  onUnmounted(() => {
+    clearInterval(refreshInterval);
+  });
+});
 
 // Computed values for loading states
 const menuDataPending = computed(() => categoriesPending.value || tagsPending.value || menuItemsPending.value);
@@ -126,11 +163,19 @@ const sortedCategories = computed(() => {
   return [...categories.value].sort((a, b) => a.order - b.order);
 });
 
+interface MenuItem {
+  _path?: string;
+  category: string;
+  tags?: string[];
+  order: number;
+  [key: string]: any;
+}
+
 // Get items for a specific category
-const getFilteredItemsByCategory = (categoryId) => {
+const getFilteredItemsByCategory = (categoryId: string): MenuItem[] => {
   if (!menuItems.value) return [];
   
-  let items = menuItems.value
+  let items = (menuItems.value as MenuItem[])
     .filter(item => item.category === categoryId)
     .sort((a, b) => a.order - b.order);
   
@@ -145,7 +190,7 @@ const getFilteredItemsByCategory = (categoryId) => {
 };
 
 // Toggle tag filter
-const toggleTagFilter = (tagId) => {
+const toggleTagFilter = (tagId: string): void => {
   const index = activeTagFilters.value.indexOf(tagId);
   if (index === -1) {
     activeTagFilters.value.push(tagId);
@@ -155,7 +200,7 @@ const toggleTagFilter = (tagId) => {
 };
 
 // Get tag name by ID
-const getTagName = (tagId) => {
+const getTagName = (tagId: string): string => {
   if (!tags.value) return '';
   const tag = tags.value.find(tag => tag.id === tagId);
   return tag ? tag.name : '';

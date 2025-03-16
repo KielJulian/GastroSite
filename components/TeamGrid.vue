@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted, onUnmounted } from 'vue';
 import { useRestaurantContent } from '~/composables/useContent';
 
 interface TeamMember {
@@ -48,10 +48,29 @@ const props = defineProps({
 
 // Fetch team members from CMS
 const { getTeamMembers } = useRestaurantContent();
-const { data: teamMembers, pending, error } = useAsyncData(
-  'homepage-team-members', 
-  () => getTeamMembers(props.limit)
+// Create a unique key for this request
+const uniqueKey = "team-members-" + Date.now();
+const { data: teamMembers, pending, error, refresh } = useAsyncData(
+  uniqueKey, 
+  () => getTeamMembers(props.limit),
+  { 
+    server: false,
+    immediate: true,
+    watch: [() => props.limit]
+  }
 );
+
+// Set up a refresh interval to check for content updates
+onMounted(() => {
+  // Refresh the data every 30 seconds to check for content updates
+  const refreshInterval = setInterval(() => {
+    refresh();
+  }, 30000);
+
+  onUnmounted(() => {
+    clearInterval(refreshInterval);
+  });
+});
 
 // Limit team members if needed
 const limitedTeamMembers = computed(() => {
