@@ -1,0 +1,6 @@
+{
+  "navigation": {
+    "fields": ["title", "description"]
+  },
+  "ignores": [".DS_Store"]
+} 

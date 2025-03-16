@@ -9,20 +9,45 @@
   "routes": [
     {
       "src": "/_nuxt/content/cache.json",
-      "dest": "/api/_content/cache"
+      "dest": "/api/_content/cache",
+      "headers": {
+        "Cache-Control": "public, max-age=0, must-revalidate"
+      }
     },
     {
       "src": "/_nuxt/content/query/(.*)",
-      "dest": "/api/_content/query/$1"
+      "dest": "/api/_content/query/$1",
+      "headers": {
+        "Cache-Control": "public, max-age=0, must-revalidate"
+      }
     },
     {
       "src": "/_nuxt/content/(.*)",
-      "dest": "/api/_content/$1"
+      "dest": "/api/_content/$1",
+      "headers": {
+        "Cache-Control": "public, max-age=0, must-revalidate"
+      }
+    },
+    {
+      "src": "/api/_content/(.*)",
+      "dest": "/api/_content/$1",
+      "headers": {
+        "Cache-Control": "public, max-age=0, must-revalidate"
+      }
     }
   ],
   "headers": [
     {
       "source": "/api/_content/cache",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/api/_content/query/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
