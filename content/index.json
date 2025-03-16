@@ -8,7 +8,7 @@
       "path": "/menu"
     },
     "lunchMenus": {
-      "path": "/lunch-menus"
+      "path": "/lunchMenus"
     },
     "team": {
       "path": "/team"

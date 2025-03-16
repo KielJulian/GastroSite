@@ -1,6 +1,6 @@
 {
-  "navigation": {
-    "fields": ["title", "description"]
-  },
+  "layout": "default",
+  "navigation": true,
+  "fields": ["title", "description"],
   "ignores": [".DS_Store"]
 } 

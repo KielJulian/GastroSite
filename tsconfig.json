@@ -1,10 +1,16 @@
 {
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "strict": true,
+    "jsx": "preserve",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
-    "types": [
-      "@nuxt/content"
-    ]
+    "lib": ["ESNext", "DOM"],
+    "types": ["@nuxt/content"]
   }
 }
