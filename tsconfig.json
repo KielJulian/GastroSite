@@ -11,6 +11,6 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "lib": ["ESNext", "DOM"],
-    "types": ["@nuxt/content"]
+    "types": ["@nuxt/content", "nuxt"]
   }
 }

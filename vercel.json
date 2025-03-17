@@ -6,7 +6,8 @@
       "use": "@nuxtjs/vercel-builder",
       "config": {
         "typescript": {
-          "ignoreErrors": true
+          "ignoreErrors": true,
+          "tsconfigPath": "./tsconfig.vercel.json"
         }
       }
     }
