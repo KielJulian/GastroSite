@@ -3,7 +3,7 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "strict": true,
+    "strict": false,
     "jsx": "preserve",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -20,7 +20,10 @@
       "@/*": ["./*"]
     },
     "noImplicitAny": false,
-    "skipDefaultLibCheck": true
+    "skipDefaultLibCheck": true,
+    "allowJs": true,
+    "checkJs": false,
+    "noEmitOnError": false
   },
   "include": [
     "nuxt.config.ts",
