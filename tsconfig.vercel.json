@@ -18,11 +18,14 @@
     "paths": {
       "~/*": ["./*"],
       "@/*": ["./*"]
-    }
+    },
+    "noImplicitAny": false,
+    "skipDefaultLibCheck": true
   },
   "include": [
     "nuxt.config.ts",
     ".nuxt/nuxt.d.ts",
+    "types/**/*.d.ts",
     "**/*"
   ],
   "exclude": [

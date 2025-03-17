@@ -2,9 +2,15 @@
   "version": 2,
   "builds": [
     {
-      "src": "nuxt.config.ts",
+      "src": "nuxt.vercel.ts",
       "use": "@nuxtjs/vercel-builder",
       "config": {
+        "tscOptions": {
+          "noEmit": false,
+          "skipLibCheck": true,
+          "noImplicitAny": false,
+          "skipDefaultLibCheck": true
+        },
         "typescript": {
           "ignoreErrors": true,
           "tsconfigPath": "./tsconfig.vercel.json"
